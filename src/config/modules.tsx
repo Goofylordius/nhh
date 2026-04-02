@@ -113,7 +113,7 @@ function findLabel(
     return `${contact.first_name} ${contact.last_name}`;
   }
 
-  return String((entry as Record<string, unknown>)[key] ?? "-");
+  return String(((entry as unknown) as Record<string, unknown>)[key] ?? "-");
 }
 
 export const moduleConfigs: Record<
