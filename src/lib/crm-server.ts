@@ -12,6 +12,10 @@ type ResourceConfig = {
   orderBy: string;
 };
 
+type BillingMutationBody = Record<string, unknown> & {
+  items?: Array<Record<string, unknown>>;
+};
+
 export const resourceConfigMap: Record<ResourceKey, ResourceConfig> = {
   customers: { table: "customers", orderBy: "updated_at" },
   contacts: { table: "contacts", orderBy: "updated_at" },
@@ -237,8 +241,9 @@ export async function createResource(
   if (resource === "quotes" || resource === "invoices") {
     const defaultTaxRate = Number(parsed.tax_rate ?? 19);
     const totals = calculateTotals(parsed.items as Array<Record<string, unknown>>, defaultTaxRate);
-    const body = {
+    const body: BillingMutationBody = {
       ...parsed,
+      items: totals.items,
       subtotal: totals.subtotal,
       tax_amount: totals.taxAmount,
       total_amount: totals.totalAmount,
@@ -364,8 +369,9 @@ export async function updateResource(
     const itemsSource = (parsed.items ?? incomingBody?.items ?? []) as Array<Record<string, unknown>>;
     const defaultTaxRate = Number(parsed.tax_rate ?? currentRecord.tax_rate ?? 19);
     const totals = calculateTotals(itemsSource, defaultTaxRate);
-    const body = {
+    const body: BillingMutationBody = {
       ...parsed,
+      items: totals.items,
       subtotal: totals.subtotal,
       tax_amount: totals.taxAmount,
       total_amount: totals.totalAmount,
