@@ -1,3 +1,4 @@
+import type { Route } from "next";
 import {
   Activity,
   CalendarDays,
@@ -13,7 +14,11 @@ import {
   Users,
 } from "lucide-react";
 
-export const navigationItems = [
+export const navigationItems: Array<{
+  href: Route;
+  label: string;
+  icon: typeof LayoutDashboard;
+}> = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/kunden", label: "Kunden", icon: Users },
   { href: "/kontakte", label: "Kontakte", icon: ContactRound },
