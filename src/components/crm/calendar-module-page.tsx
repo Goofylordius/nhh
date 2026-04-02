@@ -14,7 +14,9 @@ import { Select } from "@/components/ui/select";
 import { recurrenceOptions } from "@/config/options";
 import { useAppContext } from "@/providers/app-provider";
 
-type CalendarRecord = Record<string, unknown>;
+type CalendarRecord = {
+  id?: string;
+} & object;
 
 function buildCalendarDays(currentMonth: Date) {
   const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 1 });
@@ -53,14 +55,18 @@ export function CalendarModulePage({
 
   const stats = {
     total: records.length,
-    recurring: records.filter((record) => Boolean(record.recurrence_rule)).length,
+    recurring: records.filter((record) => Boolean((record as Record<string, unknown>).recurrence_rule)).length,
     thisWeek: records.filter((record) => {
-      const eventDate = new Date(String(record.starts_at));
+      const entry = record as Record<string, unknown>;
+      const eventDate = new Date(String(entry.starts_at));
       const start = startOfWeek(new Date(), { weekStartsOn: 1 });
       const end = endOfWeek(new Date(), { weekStartsOn: 1 });
       return eventDate >= start && eventDate <= end;
     }).length,
-    linked: records.filter((record) => Boolean(record.customer_id) || Boolean(record.project_id)).length,
+    linked: records.filter((record) => {
+      const entry = record as Record<string, unknown>;
+      return Boolean(entry.customer_id) || Boolean(entry.project_id);
+    }).length,
   };
 
   const openCreate = () => {
@@ -83,13 +89,14 @@ export function CalendarModulePage({
   };
 
   const openEdit = (record: CalendarRecord) => {
+    const entry = record as Record<string, unknown>;
     setDraft({
-      ...record,
-      participants: Array.isArray(record.participants)
-        ? record.participants.join(", ")
-        : record.participants ?? "",
-      starts_at: String(record.starts_at ?? "").slice(0, 16),
-      ends_at: String(record.ends_at ?? "").slice(0, 16),
+      ...entry,
+      participants: Array.isArray(entry.participants)
+        ? entry.participants.join(", ")
+        : entry.participants ?? "",
+      starts_at: String(entry.starts_at ?? "").slice(0, 16),
+      ends_at: String(entry.ends_at ?? "").slice(0, 16),
     });
     setDialogOpen(true);
   };
@@ -120,7 +127,9 @@ export function CalendarModulePage({
   const groupedByDay = useMemo(() => {
     return days.map((day) => ({
       day,
-      events: records.filter((record) => isSameDay(new Date(String(record.starts_at)), day)),
+      events: records.filter((record) =>
+        isSameDay(new Date(String((record as Record<string, unknown>).starts_at)), day),
+      ),
     }));
   }, [days, records]);
 
@@ -233,17 +242,20 @@ export function CalendarModulePage({
                       if (!raw) {
                         return;
                       }
-                      const entry = records.find((record) => String(record.id) === raw);
+                      const entry = records.find(
+                        (record) => String((record as Record<string, unknown>).id) === raw,
+                      );
                       if (!entry) {
                         return;
                       }
-                      const startsAt = new Date(String(entry.starts_at));
-                      const endsAt = new Date(String(entry.ends_at));
+                      const calendarEntry = entry as Record<string, unknown>;
+                      const startsAt = new Date(String(calendarEntry.starts_at));
+                      const endsAt = new Date(String(calendarEntry.ends_at));
                       const duration = endsAt.getTime() - startsAt.getTime();
                       const nextStart = new Date(day);
                       nextStart.setHours(startsAt.getHours(), startsAt.getMinutes(), 0, 0);
                       const nextEnd = new Date(nextStart.getTime() + duration);
-                      await onUpdate(String(entry.id), {
+                      await onUpdate(String(calendarEntry.id), {
                         starts_at: nextStart.toISOString(),
                         ends_at: nextEnd.toISOString(),
                       });
@@ -253,23 +265,27 @@ export function CalendarModulePage({
                       {format(day, "d")}
                     </div>
                     <div className="space-y-2">
-                      {events.map((event) => (
-                        <button
-                          className="w-full rounded-2xl bg-mint-50 px-3 py-2 text-left text-xs font-medium text-mint-900"
-                          draggable
-                          key={String(event.id)}
-                          onClick={() => openEdit(event)}
-                          onDragStart={(dragEvent) => {
-                            dragEvent.dataTransfer.setData("text/plain", String(event.id));
-                          }}
-                          type="button"
-                        >
-                          <div>{String(event.title ?? "Termin")}</div>
-                          <div className="mt-1 text-[11px] opacity-80">
-                            {format(new Date(String(event.starts_at)), "HH:mm")}
-                          </div>
-                        </button>
-                      ))}
+                      {events.map((event) => {
+                        const entry = event as Record<string, unknown>;
+
+                        return (
+                          <button
+                            className="w-full rounded-2xl bg-mint-50 px-3 py-2 text-left text-xs font-medium text-mint-900"
+                            draggable
+                            key={String(entry.id)}
+                            onClick={() => openEdit(event)}
+                            onDragStart={(dragEvent) => {
+                              dragEvent.dataTransfer.setData("text/plain", String(entry.id));
+                            }}
+                            type="button"
+                          >
+                            <div>{String(entry.title ?? "Termin")}</div>
+                            <div className="mt-1 text-[11px] opacity-80">
+                              {format(new Date(String(entry.starts_at)), "HH:mm")}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -284,19 +300,23 @@ export function CalendarModulePage({
                     <h3 className="mt-2 font-display text-2xl text-ink-900">{format(day, "d. MMM", { locale: de })}</h3>
                     <div className="mt-4 space-y-2">
                       {events.length === 0 ? <p className="text-sm text-ink-500">Keine Termine</p> : null}
-                      {events.map((event) => (
-                        <button
-                          className="w-full rounded-2xl border border-ink-100 bg-white px-3 py-2 text-left"
-                          key={String(event.id)}
-                          onClick={() => openEdit(event)}
-                          type="button"
-                        >
-                          <div className="font-medium text-ink-900">{String(event.title ?? "Termin")}</div>
-                          <div className="text-xs text-ink-600">
-                            {format(new Date(String(event.starts_at)), "HH:mm")} - {format(new Date(String(event.ends_at)), "HH:mm")}
-                          </div>
-                        </button>
-                      ))}
+                      {events.map((event) => {
+                        const entry = event as Record<string, unknown>;
+
+                        return (
+                          <button
+                            className="w-full rounded-2xl border border-ink-100 bg-white px-3 py-2 text-left"
+                            key={String(entry.id)}
+                            onClick={() => openEdit(event)}
+                            type="button"
+                          >
+                            <div className="font-medium text-ink-900">{String(entry.title ?? "Termin")}</div>
+                            <div className="text-xs text-ink-600">
+                              {format(new Date(String(entry.starts_at)), "HH:mm")} - {format(new Date(String(entry.ends_at)), "HH:mm")}
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </CardContent>
                 </Card>
@@ -305,22 +325,28 @@ export function CalendarModulePage({
           ) : (
             <div className="space-y-3">
               {records
-                .filter((record) => isSameDay(new Date(String(record.starts_at)), new Date()))
-                .map((event) => (
-                  <Card key={String(event.id)}>
-                    <CardContent className="flex items-center justify-between gap-4 p-5">
-                      <div>
-                        <h3 className="font-semibold text-ink-900">{String(event.title ?? "Termin")}</h3>
-                        <p className="text-sm text-ink-600">
-                          {format(new Date(String(event.starts_at)), "HH:mm")} - {format(new Date(String(event.ends_at)), "HH:mm")}
-                        </p>
-                      </div>
-                      <Button onClick={() => openEdit(event)} variant="ghost">
-                        Bearbeiten
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))}
+                .filter((record) =>
+                  isSameDay(new Date(String((record as Record<string, unknown>).starts_at)), new Date()),
+                )
+                .map((event) => {
+                  const entry = event as Record<string, unknown>;
+
+                  return (
+                    <Card key={String(entry.id)}>
+                      <CardContent className="flex items-center justify-between gap-4 p-5">
+                        <div>
+                          <h3 className="font-semibold text-ink-900">{String(entry.title ?? "Termin")}</h3>
+                          <p className="text-sm text-ink-600">
+                            {format(new Date(String(entry.starts_at)), "HH:mm")} - {format(new Date(String(entry.ends_at)), "HH:mm")}
+                          </p>
+                        </div>
+                        <Button onClick={() => openEdit(event)} variant="ghost">
+                          Bearbeiten
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  );
+                })}
             </div>
           )}
         </CardContent>

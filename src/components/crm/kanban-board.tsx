@@ -6,6 +6,10 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { euro } from "@/lib/utils";
 
+type KanbanRecord = {
+  id?: string;
+} & object;
+
 export function KanbanBoard({
   records,
   columnKey,
@@ -15,11 +19,11 @@ export function KanbanBoard({
   valueKey,
   onDropChange,
 }: {
-  records: Array<Record<string, unknown>>;
+  records: KanbanRecord[];
   columnKey: string;
   columns: Array<{ label: string; value: string }>;
   titleKey: string;
-  metaRenderer?: (record: Record<string, unknown>) => React.ReactNode;
+  metaRenderer?: (record: KanbanRecord) => React.ReactNode;
   valueKey?: string;
   onDropChange: (id: string, nextValue: string) => Promise<void>;
 }) {
@@ -28,7 +32,9 @@ export function KanbanBoard({
   return (
     <div className="grid gap-4 xl:grid-cols-6">
       {columns.map((column) => {
-        const columnRecords = records.filter((record) => record[columnKey] === column.value);
+        const columnRecords = records.filter(
+          (record) => (record as Record<string, unknown>)[columnKey] === column.value,
+        );
         return (
           <Card className="overflow-hidden" key={column.value}>
             <CardContent className="space-y-3 p-4">
@@ -55,36 +61,40 @@ export function KanbanBoard({
                   setDraggingId(null);
                 }}
               >
-                {columnRecords.map((record) => (
-                  <article
-                    className={`rounded-2xl border border-white bg-white p-3 shadow-sm transition ${
-                      draggingId === record.id ? "opacity-60" : ""
-                    }`}
-                    draggable
-                    key={String(record.id)}
-                    onDragEnd={() => setDraggingId(null)}
-                    onDragStart={(event) => {
-                      event.dataTransfer.setData("text/plain", String(record.id));
-                      setDraggingId(String(record.id));
-                    }}
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="font-semibold text-ink-900">
-                          {String(record[titleKey] ?? "Ohne Titel")}
-                        </h3>
-                        {metaRenderer ? (
-                          <div className="mt-2 text-xs text-ink-600">{metaRenderer(record)}</div>
+                {columnRecords.map((record) => {
+                  const entry = record as Record<string, unknown>;
+
+                  return (
+                    <article
+                      className={`rounded-2xl border border-white bg-white p-3 shadow-sm transition ${
+                        draggingId === entry.id ? "opacity-60" : ""
+                      }`}
+                      draggable
+                      key={String(entry.id)}
+                      onDragEnd={() => setDraggingId(null)}
+                      onDragStart={(event) => {
+                        event.dataTransfer.setData("text/plain", String(entry.id));
+                        setDraggingId(String(entry.id));
+                      }}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div>
+                          <h3 className="font-semibold text-ink-900">
+                            {String(entry[titleKey] ?? "Ohne Titel")}
+                          </h3>
+                          {metaRenderer ? (
+                            <div className="mt-2 text-xs text-ink-600">{metaRenderer(record)}</div>
+                          ) : null}
+                        </div>
+                        {valueKey ? (
+                          <div className="text-right text-xs font-semibold text-mint-800">
+                            {euro(Number(entry[valueKey] ?? 0))}
+                          </div>
                         ) : null}
                       </div>
-                      {valueKey ? (
-                        <div className="text-right text-xs font-semibold text-mint-800">
-                          {euro(Number(record[valueKey] ?? 0))}
-                        </div>
-                      ) : null}
-                    </div>
-                  </article>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>

@@ -13,6 +13,10 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useAppContext } from "@/providers/app-provider";
 
+type DocumentRecord = {
+  id?: string;
+} & object;
+
 export function DocumentsModulePage({
   records,
   loading,
@@ -21,7 +25,7 @@ export function DocumentsModulePage({
   onDelete,
   onUpload,
 }: {
-  records: Array<Record<string, unknown>>;
+  records: DocumentRecord[];
   loading: boolean;
   error: string | null;
   onUpdate: (id: string, payload: Record<string, unknown>) => Promise<void>;
@@ -86,7 +90,10 @@ export function DocumentsModulePage({
           <CardContent className="p-5">
             <p className="text-sm text-ink-600">Mit Kunde</p>
             <p className="mt-2 font-display text-4xl text-ink-900">
-              {records.filter((record) => Boolean(record.customer_id)).length}
+              {
+                records.filter((record) => Boolean((record as Record<string, unknown>).customer_id))
+                  .length
+              }
             </p>
           </CardContent>
         </Card>
@@ -94,7 +101,10 @@ export function DocumentsModulePage({
           <CardContent className="p-5">
             <p className="text-sm text-ink-600">Mit Projekt</p>
             <p className="mt-2 font-display text-4xl text-ink-900">
-              {records.filter((record) => Boolean(record.project_id)).length}
+              {
+                records.filter((record) => Boolean((record as Record<string, unknown>).project_id))
+                  .length
+              }
             </p>
           </CardContent>
         </Card>
@@ -102,7 +112,15 @@ export function DocumentsModulePage({
           <CardContent className="p-5">
             <p className="text-sm text-ink-600">Speicher</p>
             <p className="mt-2 font-display text-4xl text-ink-900">
-              {(records.reduce((sum, record) => sum + Number(record.file_size ?? 0), 0) / 1024 / 1024).toFixed(1)} MB
+              {(
+                records.reduce(
+                  (sum, record) => sum + Number((record as Record<string, unknown>).file_size ?? 0),
+                  0,
+                ) /
+                1024 /
+                1024
+              ).toFixed(1)}{" "}
+              MB
             </p>
           </CardContent>
         </Card>
@@ -151,48 +169,52 @@ export function DocumentsModulePage({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-100 bg-white">
-                  {records.map((record) => (
-                    <tr key={String(record.id)}>
-                      <td className="px-4 py-3">{String(record.title ?? "-")}</td>
-                      <td className="px-4 py-3">{String(record.category ?? "-")}</td>
-                      <td className="px-4 py-3">
-                        {bootstrap?.customers.find((customer) => customer.id === record.customer_id)?.company_name ?? "-"}
-                      </td>
-                      <td className="px-4 py-3">
-                        {bootstrap?.projects.find((project) => project.id === record.project_id)?.title ?? "-"}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="font-medium text-ink-900">{String(record.file_name ?? "-")}</div>
-                        <div className="text-xs text-ink-600">
-                          {(Number(record.file_size ?? 0) / 1024).toFixed(1)} KB
-                        </div>
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex justify-end gap-2">
-                          <Link
-                            className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
-                            href={`/api/documents/${record.id}/download`}
-                          >
-                            <Download className="h-4 w-4" />
-                            Download
-                          </Link>
-                          <Button
-                            onClick={() => {
-                              setEditingRecord(record);
-                              setEditOpen(true);
-                            }}
-                            variant="ghost"
-                          >
-                            Bearbeiten
-                          </Button>
-                          <Button onClick={() => void onDelete(String(record.id))} variant="danger">
-                            <Trash2 className="h-4 w-4" />
-                            Loeschen
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {records.map((record) => {
+                    const entry = record as Record<string, unknown>;
+
+                    return (
+                      <tr key={String(entry.id)}>
+                        <td className="px-4 py-3">{String(entry.title ?? "-")}</td>
+                        <td className="px-4 py-3">{String(entry.category ?? "-")}</td>
+                        <td className="px-4 py-3">
+                          {bootstrap?.customers.find((customer) => customer.id === entry.customer_id)?.company_name ?? "-"}
+                        </td>
+                        <td className="px-4 py-3">
+                          {bootstrap?.projects.find((project) => project.id === entry.project_id)?.title ?? "-"}
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="font-medium text-ink-900">{String(entry.file_name ?? "-")}</div>
+                          <div className="text-xs text-ink-600">
+                            {(Number(entry.file_size ?? 0) / 1024).toFixed(1)} KB
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex justify-end gap-2">
+                            <Link
+                              className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
+                              href={`/api/documents/${entry.id}/download`}
+                            >
+                              <Download className="h-4 w-4" />
+                              Download
+                            </Link>
+                            <Button
+                              onClick={() => {
+                                setEditingRecord(entry);
+                                setEditOpen(true);
+                              }}
+                              variant="ghost"
+                            >
+                              Bearbeiten
+                            </Button>
+                            <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
+                              <Trash2 className="h-4 w-4" />
+                              Loeschen
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

@@ -15,6 +15,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { useAppContext } from "@/providers/app-provider";
 
+type EntityRecord = {
+  id?: string;
+} & object;
+
 function fieldOptions(
   field: ModuleField,
   bootstrap: ReturnType<typeof useAppContext>["bootstrap"],
@@ -117,13 +121,13 @@ export function EntityModulePage({
   topActions,
 }: {
   config: ModuleConfig;
-  records: Array<Record<string, unknown>>;
+  records: EntityRecord[];
   loading: boolean;
   error: string | null;
   onCreate: (payload: Record<string, unknown>) => Promise<void>;
   onUpdate: (id: string, payload: Record<string, unknown>) => Promise<void>;
   onDelete: (id: string) => Promise<void>;
-  rowActions?: (record: Record<string, unknown>) => React.ReactNode;
+  rowActions?: (record: EntityRecord) => React.ReactNode;
   topActions?: React.ReactNode;
 }) {
   const { bootstrap } = useAppContext();
@@ -138,16 +142,17 @@ export function EntityModulePage({
 
   const filteredRecords = useMemo(() => {
     return records.filter((record) => {
+      const entry = record as Record<string, unknown>;
       const matchesSearch =
         searchTerm.trim().length === 0 ||
         config.searchKeys.some((key) =>
-          String(record[key] ?? "")
+          String(entry[key] ?? "")
             .toLowerCase()
             .includes(searchTerm.toLowerCase()),
         );
 
       const matchesFilter =
-        !config.filterKey || !filterValue || String(record[config.filterKey] ?? "") === filterValue;
+        !config.filterKey || !filterValue || String(entry[config.filterKey] ?? "") === filterValue;
 
       return matchesSearch && matchesFilter;
     });
@@ -158,17 +163,18 @@ export function EntityModulePage({
     setDialogOpen(true);
   };
 
-  const openEditDialog = (record: Record<string, unknown>) => {
+  const openEditDialog = (record: EntityRecord) => {
+    const entry = record as Record<string, unknown>;
     setEditingRecord({
-      ...record,
-      ...(record.tags
-        ? { tags: Array.isArray(record.tags) ? record.tags.join(", ") : record.tags }
+      ...entry,
+      ...(entry.tags
+        ? { tags: Array.isArray(entry.tags) ? entry.tags.join(", ") : entry.tags }
         : {}),
-      ...(record.participants
+      ...(entry.participants
         ? {
-            participants: Array.isArray(record.participants)
-              ? record.participants.join(", ")
-              : record.participants,
+            participants: Array.isArray(entry.participants)
+              ? entry.participants.join(", ")
+              : entry.participants,
           }
         : {}),
     });
@@ -233,7 +239,9 @@ export function EntityModulePage({
           <Card key={stat.label}>
             <CardContent className="p-5">
               <p className="text-sm text-ink-600">{stat.label}</p>
-              <p className="mt-2 font-display text-4xl text-ink-900">{stat.getValue(records)}</p>
+              <p className="mt-2 font-display text-4xl text-ink-900">
+                {stat.getValue(records as Array<Record<string, unknown>>)}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -321,12 +329,18 @@ export function EntityModulePage({
               columnKey={config.kanbanKey}
               columns={config.kanbanOptions}
               metaRenderer={(record) => (
-                <>
-                  <p>{record.owner_name ? `Owner: ${String(record.owner_name)}` : "Ohne Owner"}</p>
-                  {record.expected_close_date ? (
-                    <p>Abschluss: {String(record.expected_close_date)}</p>
-                  ) : null}
-                </>
+                (() => {
+                  const entry = record as Record<string, unknown>;
+
+                  return (
+                    <>
+                      <p>{entry.owner_name ? `Owner: ${String(entry.owner_name)}` : "Ohne Owner"}</p>
+                      {entry.expected_close_date ? (
+                        <p>Abschluss: {String(entry.expected_close_date)}</p>
+                      ) : null}
+                    </>
+                  );
+                })()
               )}
               onDropChange={async (id, nextValue) => {
                 await onUpdate(id, { [config.kanbanKey as string]: nextValue });
@@ -351,27 +365,31 @@ export function EntityModulePage({
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-ink-100 bg-white">
-                  {filteredRecords.map((record) => (
-                    <tr className="align-top" key={String(record.id)}>
-                      {config.columns.map((column) => (
-                        <td className="max-w-[260px] px-4 py-3 text-ink-800" key={column.key}>
-                          {column.render ? column.render(record, bootstrap) : String(record[column.key] ?? "-")}
+                  {filteredRecords.map((record) => {
+                    const entry = record as Record<string, unknown>;
+
+                    return (
+                      <tr className="align-top" key={String(entry.id)}>
+                        {config.columns.map((column) => (
+                          <td className="max-w-[260px] px-4 py-3 text-ink-800" key={column.key}>
+                            {column.render ? column.render(entry, bootstrap) : String(entry[column.key] ?? "-")}
+                          </td>
+                        ))}
+                        <td className="px-4 py-3">
+                          <div className="flex justify-end gap-2">
+                            {rowActions ? rowActions(record) : null}
+                            <Button onClick={() => openEditDialog(record)} variant="ghost">
+                              Bearbeiten
+                            </Button>
+                            <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
+                              <Trash2 className="h-4 w-4" />
+                              Loeschen
+                            </Button>
+                          </div>
                         </td>
-                      ))}
-                      <td className="px-4 py-3">
-                        <div className="flex justify-end gap-2">
-                          {rowActions ? rowActions(record) : null}
-                          <Button onClick={() => openEditDialog(record)} variant="ghost">
-                            Bearbeiten
-                          </Button>
-                          <Button onClick={() => void onDelete(String(record.id))} variant="danger">
-                            <Trash2 className="h-4 w-4" />
-                            Loeschen
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
