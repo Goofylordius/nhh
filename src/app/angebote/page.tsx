@@ -18,17 +18,21 @@ export default function QuotesPage() {
         label="Angebote"
         loading={quoteResource.loading}
         onConvertQuote={async (record) => {
+          const entry = record as Record<string, unknown>;
+
           await invoiceResource.create({
-            customer_id: record.customer_id,
-            source_quote_id: record.id,
-            title: `${String(record.title ?? "Angebot")} - Rechnung`,
+            customer_id:
+              typeof entry.customer_id === "string" ? entry.customer_id : undefined,
+            source_quote_id: typeof entry.id === "string" ? entry.id : undefined,
+            title: `${String(entry.title ?? "Angebot")} - Rechnung`,
             status: "faellig",
             issue_date: new Date().toISOString().slice(0, 10),
             due_date: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14).toISOString().slice(0, 10),
-            payment_terms: record.payment_terms,
-            tax_rate: record.tax_rate,
-            items: record.items,
-            notes: record.notes,
+            payment_terms:
+              typeof entry.payment_terms === "string" ? entry.payment_terms : undefined,
+            tax_rate: typeof entry.tax_rate === "number" ? entry.tax_rate : Number(entry.tax_rate ?? 19),
+            items: Array.isArray(entry.items) ? entry.items : [],
+            notes: typeof entry.notes === "string" ? entry.notes : undefined,
           });
         }}
         onCreate={quoteResource.create}
@@ -41,4 +45,3 @@ export default function QuotesPage() {
     </AppShell>
   );
 }
-
