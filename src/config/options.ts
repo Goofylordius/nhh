@@ -28,9 +28,9 @@ export const billingStatusOptions: Array<{ label: string; value: BillingStatus }
   { label: "Entwurf", value: "entwurf" },
   { label: "Versendet", value: "versendet" },
   { label: "Angenommen", value: "angenommen" },
-  { label: "Faellig", value: "faellig" },
+  { label: "Fällig", value: "faellig" },
   { label: "Bezahlt", value: "bezahlt" },
-  { label: "Ueberfaellig", value: "ueberfaellig" },
+  { label: "Überfällig", value: "ueberfaellig" },
   { label: "Storniert", value: "storniert" },
 ];
 
@@ -76,8 +76,7 @@ export const documentCategoryOptions: Array<{
 
 export const recurrenceOptions = [
   { label: "Keine Wiederholung", value: "" },
-  { label: "Taeglich", value: "daily" },
-  { label: "Woechentlich", value: "weekly" },
+  { label: "Täglich", value: "daily" },
+  { label: "Wöchentlich", value: "weekly" },
   { label: "Monatlich", value: "monthly" },
 ];
-

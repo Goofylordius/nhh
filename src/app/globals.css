@@ -12,6 +12,46 @@
   --line-strong: rgba(255, 255, 255, 0.16);
   --text-main: #edf3f7;
   --text-soft: #9cadbf;
+  --accent-mint: #3de7b8;
+  --accent-cyan: #65d7ff;
+  --accent-clay: #ff9867;
+  --ambient-a: rgba(61, 231, 184, 0.18);
+  --ambient-b: rgba(255, 145, 92, 0.12);
+  --ambient-c: rgba(92, 110, 255, 0.12);
+}
+
+html[data-theme="midnight"] {
+  --surface-0: #02050a;
+  --surface-1: rgba(3, 8, 18, 0.9);
+  --surface-2: rgba(255, 255, 255, 0.03);
+  --surface-3: rgba(255, 255, 255, 0.06);
+  --line-soft: rgba(130, 171, 214, 0.12);
+  --line-strong: rgba(130, 171, 214, 0.2);
+  --text-main: #eff7ff;
+  --text-soft: #95a8bf;
+  --accent-mint: #2de0b6;
+  --accent-cyan: #4fc3ff;
+  --accent-clay: #ff945c;
+  --ambient-a: rgba(45, 224, 182, 0.14);
+  --ambient-b: rgba(79, 195, 255, 0.12);
+  --ambient-c: rgba(96, 89, 255, 0.14);
+}
+
+html[data-theme="contrast"] {
+  --surface-0: #0c0e12;
+  --surface-1: rgba(16, 18, 24, 0.94);
+  --surface-2: rgba(255, 255, 255, 0.055);
+  --surface-3: rgba(255, 255, 255, 0.085);
+  --line-soft: rgba(255, 255, 255, 0.14);
+  --line-strong: rgba(255, 255, 255, 0.24);
+  --text-main: #ffffff;
+  --text-soft: #c0cad6;
+  --accent-mint: #6effd1;
+  --accent-cyan: #83caff;
+  --accent-clay: #ffb089;
+  --ambient-a: rgba(110, 255, 209, 0.1);
+  --ambient-b: rgba(131, 202, 255, 0.08);
+  --ambient-c: rgba(255, 176, 137, 0.09);
 }
 
 html {
@@ -22,17 +62,17 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(61, 231, 184, 0.18), transparent 26%),
-    radial-gradient(circle at 78% 8%, rgba(255, 145, 92, 0.12), transparent 20%),
-    radial-gradient(circle at bottom right, rgba(92, 110, 255, 0.12), transparent 28%),
-    linear-gradient(180deg, #071019 0%, #0a131e 32%, #0e1723 100%);
+    radial-gradient(circle at top left, var(--ambient-a), transparent 26%),
+    radial-gradient(circle at 78% 8%, var(--ambient-b), transparent 20%),
+    radial-gradient(circle at bottom right, var(--ambient-c), transparent 28%),
+    linear-gradient(180deg, var(--surface-0) 0%, #0a131e 32%, #0e1723 100%);
   color: var(--text-main);
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 * {
-  border-color: rgb(100 116 139 / 0.24);
+  border-color: var(--line-soft);
 }
 
 body::before {
@@ -71,7 +111,8 @@ body::before {
 }
 
 .focus-ring {
-  @apply outline-none ring-0 focus-visible:ring-2 focus-visible:ring-mint-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+  @apply outline-none ring-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
+  --tw-ring-color: var(--accent-mint);
 }
 
 ::-webkit-scrollbar {

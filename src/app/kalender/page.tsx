@@ -12,7 +12,7 @@ export default function CalendarPage() {
 
   return (
     <AppShell
-      description="Kalender fuer Einsaetze, Meetings und Termine mit Monats- und Wochenansicht."
+      description="Kalender für Einsätze, Meetings und Termine mit Monats- und Wochenansicht."
       title="Kalender"
     >
       <CalendarModulePage

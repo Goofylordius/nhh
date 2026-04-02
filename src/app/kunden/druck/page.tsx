@@ -13,7 +13,7 @@ export default async function CustomersPrintPage() {
         <p className="text-sm uppercase tracking-[0.24em] text-ink-500">WerkstattCRM</p>
         <h1 className="mt-3 font-display text-5xl text-ink-900">Kundenliste</h1>
         <p className="mt-3 text-sm text-ink-700">
-          Druckansicht fuer PDF-Export und interne Archivierung.
+          Druckansicht für PDF-Export und interne Archivierung.
         </p>
       </header>
       <table className="min-w-full divide-y divide-ink-100 text-left text-sm">

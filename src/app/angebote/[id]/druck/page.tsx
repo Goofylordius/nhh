@@ -38,7 +38,7 @@ export default async function QuotePrintPage({
             <div className="text-right text-sm text-ink-700">
               <p>Status: {quote.status}</p>
               <p>Datum: {quote.issue_date}</p>
-              <p>Gueltig bis: {quote.valid_until ?? "-"}</p>
+              <p>Gültig bis: {quote.valid_until ?? "-"}</p>
             </div>
           </header>
           <section className="grid gap-6 md:grid-cols-2">

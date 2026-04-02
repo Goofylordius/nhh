@@ -245,15 +245,30 @@ export interface BootstrapPayload {
 export interface DashboardPayload {
   customerCount: number;
   leadCount: number;
+  activeProjectCount: number;
   openRevenue: number;
   wonRevenue: number;
+  winRate: number;
   overdueInvoices: number;
+  overdueInvoiceAmount: number;
   taskDueToday: number;
+  urgentTaskCount: number;
   activityCountWeek: number;
+  documentCount: number;
+  documentStorageMb: number;
   revenueByMonth: Array<{ month: string; amount: number }>;
   pipelineByStage: Array<{ stage: string; count: number; amount: number }>;
   taskByStatus: Array<{ status: string; count: number }>;
   recentActivities: Activity[];
+  urgentTasks: Array<
+    Pick<Task, "id" | "title" | "priority" | "status" | "due_date" | "owner_name">
+  >;
+  upcomingEvents: Array<
+    Pick<CalendarEvent, "id" | "title" | "starts_at" | "ends_at" | "location" | "event_type">
+  >;
+  recentInvoices: Array<
+    Pick<Invoice, "id" | "title" | "invoice_number" | "status" | "due_date" | "total_amount">
+  >;
 }
 
 export type ResourceKey =
@@ -286,4 +301,3 @@ export type ResourceRecordMap = {
   activities: Activity;
   settings: SettingRecord;
 };
-

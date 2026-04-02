@@ -10,7 +10,7 @@ export default function ActivitiesPage() {
 
   return (
     <AppShell
-      description="Kundenhistorie fuer Anrufe, Meetings, Mails und Schnellnotizen."
+      description="Kundenhistorie für Anrufe, Meetings, Mails und Schnellnotizen."
       title="Aktivitäten"
     >
       <EntityModulePage

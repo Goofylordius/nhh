@@ -8,7 +8,7 @@ export default function ImpressumPage() {
         <p>Telefon: +49 30 1234567</p>
         <p>E-Mail: info@musterbetrieb.de</p>
         <p>USt-IdNr.: DE999999999</p>
-        <p>Diese Angaben sind als Vorlage gedacht und muessen fuer den Produktiveinsatz angepasst werden.</p>
+        <p>Diese Angaben sind als Vorlage gedacht und müssen für den Produktiveinsatz angepasst werden.</p>
       </div>
     </main>
   );

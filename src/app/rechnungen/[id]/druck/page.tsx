@@ -38,7 +38,7 @@ export default async function InvoicePrintPage({
             <div className="text-right text-sm text-ink-700">
               <p>Status: {invoice.status}</p>
               <p>Datum: {invoice.issue_date}</p>
-              <p>Faellig: {invoice.due_date ?? "-"}</p>
+              <p>Fällig: {invoice.due_date ?? "-"}</p>
             </div>
           </header>
           <section className="grid gap-6 md:grid-cols-2">

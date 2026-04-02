@@ -8,6 +8,8 @@ import type { BootstrapPayload } from "@/types/crm";
 interface AppContextValue {
   actorLabel: string;
   setActorLabel: (value: string) => void;
+  themeMode: "deep" | "midnight" | "contrast";
+  setThemeMode: (value: "deep" | "midnight" | "contrast") => void;
   bootstrap: BootstrapPayload | null;
   bootstrapLoading: boolean;
   refreshBootstrap: () => Promise<void>;
@@ -17,6 +19,7 @@ const AppContext = createContext<AppContextValue | null>(null);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [actorLabel, setActorLabelState] = useState("Demo-Arbeitsplatz");
+  const [themeMode, setThemeModeState] = useState<"deep" | "midnight" | "contrast">("deep");
   const [bootstrap, setBootstrap] = useState<BootstrapPayload | null>(null);
   const [bootstrapLoading, setBootstrapLoading] = useState(true);
 
@@ -25,7 +28,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (stored) {
       setActorLabelState(stored);
     }
+
+    const storedTheme = window.localStorage.getItem("crm-demo-theme");
+    if (storedTheme === "deep" || storedTheme === "midnight" || storedTheme === "contrast") {
+      setThemeModeState(storedTheme);
+    }
   }, []);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = themeMode;
+    window.localStorage.setItem("crm-demo-theme", themeMode);
+  }, [themeMode]);
 
   const refreshBootstrap = useCallback(async () => {
     setBootstrapLoading(true);
@@ -47,15 +60,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setActorLabelState(nextValue);
   };
 
+  const setThemeMode = (value: "deep" | "midnight" | "contrast") => {
+    setThemeModeState(value);
+  };
+
   const contextValue = useMemo(
     () => ({
       actorLabel,
       setActorLabel,
+      themeMode,
+      setThemeMode,
       bootstrap,
       bootstrapLoading,
       refreshBootstrap,
     }),
-    [actorLabel, bootstrap, bootstrapLoading, refreshBootstrap],
+    [actorLabel, bootstrap, bootstrapLoading, refreshBootstrap, themeMode],
   );
 
   return <AppContext.Provider value={contextValue}>{children}</AppContext.Provider>;

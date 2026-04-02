@@ -10,7 +10,7 @@ export default function ProjectsPage() {
 
   return (
     <AppShell
-      description="Projektuebersicht fuer aktive Auftraege, Phasen, Budgets und Fertigstellungsgrad."
+      description="Projektübersicht für aktive Aufträge, Phasen, Budgets und Fertigstellungsgrad."
       title="Projekte"
     >
       <EntityModulePage
@@ -25,4 +25,3 @@ export default function ProjectsPage() {
     </AppShell>
   );
 }
-

@@ -15,9 +15,9 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: "WerkstattCRM",
+  title: "WerkstattCRM V2",
   description:
-    "Sicheres CRM für Handwerksbetriebe und kleine Unternehmen mit Supabase und Vercel.",
+    "Sicheres CRM für Handwerksbetriebe und kleine Unternehmen mit Supabase, Vercel und modernem Deep-Darkmode-Workspace.",
 };
 
 export default function RootLayout({

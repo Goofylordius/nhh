@@ -215,7 +215,7 @@ export function EntityModulePage({
         try {
           payload.setting_value = JSON.parse(payload.setting_value);
         } catch {
-          throw new Error("Das JSON in den Einstellungen ist ungueltig.");
+          throw new Error("Das JSON in den Einstellungen ist ungültig.");
         }
       }
 

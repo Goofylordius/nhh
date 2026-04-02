@@ -54,14 +54,14 @@ export default function CustomersPage() {
 
   return (
     <AppShell
-      description="Import, Export, Suche, Statusfilter und Duplikaterkennung fuer Kunden- und Lead-Daten."
+      description="Import, Export, Suche, Statusfilter und Duplikaterkennung für Kunden- und Lead-Daten."
       title="Kunden"
     >
       <div className="space-y-4">
         {duplicates.length > 0 ? (
           <Card>
             <CardHeader
-              description="Hash-basierte Erkennung ueber Firma, E-Mail und Telefon."
+              description="Hash-basierte Erkennung über Firma, E-Mail und Telefon."
               title="Moegliche Duplikate"
             />
             <CardContent className="p-5 text-sm text-ink-700">

@@ -22,14 +22,14 @@ export default function SettingsPage() {
 
   return (
     <AppShell
-      description="Firmendaten, Pipeline, Tags und Compliance-Hinweise fuer DSGVO und GoBD."
+      description="Firmendaten, Pipeline, Tags und Compliance-Hinweise für DSGVO und GoBD."
       title="Einstellungen"
     >
       <div className="space-y-4">
         <div className="grid gap-4 xl:grid-cols-[1.2fr,1fr]">
           <Card>
             <CardHeader
-              description="Phase 1 ohne Login. Der Bearbeitername wird in Audit-Eintraegen gespeichert."
+              description="Phase 1 ohne Login. Der Bearbeitername wird in Audit-Einträgen gespeichert."
               title="Arbeitsplatz / Bearbeiter"
             />
             <CardContent className="space-y-4 p-5">
@@ -44,10 +44,10 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
           <Card>
-            <CardHeader description="Vorlage fuer interne Dokumentation." title="DSGVO / GoBD Kurzleitfaden" />
+            <CardHeader description="Vorlage für interne Dokumentation." title="DSGVO / GoBD Kurzleitfaden" />
             <CardContent className="space-y-3 p-5 text-sm text-ink-700">
               <p>Datenminimierung: Nur benoetigte Kunden- und Projektdaten werden gespeichert.</p>
-              <p>Loeschkonzept: Soft-Delete ueber `deleted_at`, Export fuer Betroffenenrechte per JSON-Endpunkt.</p>
+              <p>Löschkonzept: Soft-Delete über `deleted_at`, Export für Betroffenenrechte per JSON-Endpunkt.</p>
               <p>Nachvollziehbarkeit: Audit-Trigger speichern INSERT, UPDATE und DELETE in `audit_logs`.</p>
               <p>Unveraenderbarkeit: `audit_logs` lassen sich per Trigger nicht aktualisieren oder loeschen.</p>
               {firmData ? <p>Aktive Firmenvorlage: {JSON.stringify(firmData.setting_value)}</p> : null}

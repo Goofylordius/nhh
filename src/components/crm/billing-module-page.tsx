@@ -213,7 +213,7 @@ export function BillingModulePage({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Dokumente</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">{label}</p>
             <p className="mt-3 font-display text-4xl text-white">{records.length}</p>
           </CardContent>
         </Card>
@@ -334,7 +334,7 @@ export function BillingModulePage({
                               </Button>
                             ) : null}
                             <Link
-                              className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
+                              className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/[0.08]"
                               href={`/${resource === "quotes" ? "angebote" : "rechnungen"}/${entry.id}/druck`}
                             >
                               <Download className="h-4 w-4" />
@@ -360,7 +360,7 @@ export function BillingModulePage({
       </Card>
 
       <Dialog
-        description="Summen und Steuerbetraege werden serverseitig neu berechnet."
+        description="Summen und Steuerbeträge werden serverseitig neu berechnet."
         onClose={() => setDialogOpen(false)}
         open={dialogOpen}
         size="wide"
@@ -411,7 +411,7 @@ export function BillingModulePage({
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-slate-200">
-              {resource === "quotes" ? "Gueltig bis" : "Faellig am"}
+              {resource === "quotes" ? "Gültig bis" : "Fällig am"}
             </label>
             <Input
               onChange={(event) =>

@@ -151,7 +151,7 @@ export function DocumentsModulePage({
           ) : records.length === 0 ? (
             <EmptyState
               actionLabel="Dokument hochladen"
-              description="Noch kein Dokument im Supabase Storage verknuepft."
+              description="Noch kein Dokument im Supabase Storage verknüpft."
               onAction={() => setDialogOpen(true)}
               title="Keine Dokumente"
             />
@@ -191,7 +191,7 @@ export function DocumentsModulePage({
                         <td className="px-4 py-3">
                           <div className="flex justify-end gap-2">
                             <Link
-                              className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-semibold text-slate-100"
+                              className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2 text-sm font-semibold text-slate-100 transition hover:bg-white/[0.08]"
                               href={`/api/documents/${entry.id}/download`}
                             >
                               <Download className="h-4 w-4" />
@@ -230,14 +230,14 @@ export function DocumentsModulePage({
       >
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Titel</label>
             <Input
               onChange={(event) => setDraft((current) => ({ ...current, title: event.target.value }))}
               value={String(draft.title ?? "")}
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Kategorie</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Kategorie</label>
             <Select
               onChange={(event) => setDraft((current) => ({ ...current, category: event.target.value }))}
               value={String(draft.category ?? "sonstiges")}
@@ -250,7 +250,7 @@ export function DocumentsModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Kunde</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Kunde</label>
             <Select
               onChange={(event) => setDraft((current) => ({ ...current, customer_id: event.target.value }))}
               value={String(draft.customer_id ?? "")}
@@ -264,7 +264,7 @@ export function DocumentsModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Projekt</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Projekt</label>
             <Select
               onChange={(event) => setDraft((current) => ({ ...current, project_id: event.target.value }))}
               value={String(draft.project_id ?? "")}
@@ -278,7 +278,7 @@ export function DocumentsModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Datei</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Datei</label>
             <Input onChange={(event) => setFile(event.target.files?.[0] ?? null)} type="file" />
           </div>
         </div>
@@ -294,14 +294,14 @@ export function DocumentsModulePage({
       </Dialog>
 
       <Dialog
-        description="Metadaten koennen ohne erneuten Upload geaendert werden."
+        description="Metadaten können ohne erneuten Upload geändert werden."
         onClose={() => setEditOpen(false)}
         open={editOpen}
         title="Dokument bearbeiten"
       >
         <div className="space-y-4">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Titel</label>
             <Input
               onChange={(event) =>
                 setEditingRecord((current) => ({ ...(current ?? {}), title: event.target.value }))
@@ -310,7 +310,7 @@ export function DocumentsModulePage({
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Kategorie</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Kategorie</label>
             <Select
               onChange={(event) =>
                 setEditingRecord((current) => ({ ...(current ?? {}), category: event.target.value }))

@@ -72,3 +72,48 @@ export function ensureNumber(value: unknown, fallback = 0) {
 export function ensureString(value: unknown, fallback = "") {
   return typeof value === "string" ? value : fallback;
 }
+
+export function humanizeStatus(value: string | null | undefined) {
+  const source = String(value ?? "").trim().toLowerCase();
+  const labels: Record<string, string> = {
+    lead: "Lead",
+    aktiv: "Aktiv",
+    inaktiv: "Inaktiv",
+    neu: "Neu",
+    kontaktiert: "Kontaktiert",
+    angebot: "Angebot",
+    verhandlung: "Verhandlung",
+    gewonnen: "Gewonnen",
+    verloren: "Verloren",
+    entwurf: "Entwurf",
+    versendet: "Versendet",
+    angenommen: "Angenommen",
+    faellig: "Fällig",
+    ueberfaellig: "Überfällig",
+    bezahlt: "Bezahlt",
+    storniert: "Storniert",
+    geplant: "Geplant",
+    pausiert: "Pausiert",
+    abgeschlossen: "Abgeschlossen",
+    offen: "Offen",
+    in_arbeit: "In Arbeit",
+    wartet: "Wartet",
+    erledigt: "Erledigt",
+    kritisch: "Kritisch",
+    mittel: "Mittel",
+    niedrig: "Niedrig",
+    hoch: "Hoch",
+    anruf: "Anruf",
+    email: "E-Mail",
+    meeting: "Meeting",
+    notiz: "Notiz",
+  };
+
+  if (labels[source]) {
+    return labels[source];
+  }
+
+  return source
+    .replaceAll("_", " ")
+    .replace(/\b\w/g, (character) => character.toUpperCase());
+}

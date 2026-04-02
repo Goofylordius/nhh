@@ -10,7 +10,7 @@ export default function TasksPage() {
 
   return (
     <AppShell
-      description="Kanban, Erinnerungen und Wiederholungslogik fuer operative Aufgaben im Team."
+      description="Kanban, Erinnerungen und Wiederholungslogik für operative Aufgaben im Team."
       title="Aufgaben"
     >
       <EntityModulePage
@@ -25,4 +25,3 @@ export default function TasksPage() {
     </AppShell>
   );
 }
-

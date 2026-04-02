@@ -509,7 +509,7 @@ export const moduleConfigs: Record<
     resource: "tasks",
     label: "Aufgaben",
     singular: "Aufgabe",
-    description: "Liste, Board und Erinnerungen fuer wiederkehrende oder terminierte Aufgaben.",
+    description: "Liste, Board und Erinnerungen für wiederkehrende oder terminierte Aufgaben.",
     defaultValues: {
       priority: "mittel",
       status: "offen",
@@ -561,7 +561,7 @@ export const moduleConfigs: Record<
       { key: "priority", label: "Priorität", type: "select", options: priorityOptions },
       { key: "status", label: "Status", type: "select", options: taskStatusOptions },
       { key: "owner_name", label: "Verantwortlich", type: "text" },
-      { key: "due_date", label: "Faelligkeit", type: "datetime-local" },
+      { key: "due_date", label: "Fälligkeit", type: "datetime-local" },
       { key: "reminder_at", label: "Erinnerung", type: "datetime-local" },
       { key: "recurrence_rule", label: "Wiederholung", type: "text" },
       { key: "recurrence_interval", label: "Intervall", type: "number" },
@@ -597,7 +597,7 @@ export const moduleConfigs: Record<
       },
       {
         key: "due_date",
-        label: "Faellig",
+        label: "Fällig",
         render: (record) => compactDateTime(String(record.due_date ?? "")),
       },
       { key: "owner_name", label: "Verantwortlich" },

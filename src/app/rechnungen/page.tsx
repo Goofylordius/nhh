@@ -12,7 +12,7 @@ export default function InvoicesPage() {
 
   return (
     <AppShell
-      description="Rechnungen mit Faelligkeit, Zahlungsstatus, Druckansicht und Steuerberechnung."
+      description="Rechnungen mit Fälligkeit, Zahlungsstatus, Druckansicht und Steuerberechnung."
       title="Rechnungen"
     >
       <BillingModulePage
