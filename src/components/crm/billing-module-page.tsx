@@ -25,6 +25,19 @@ type BillingItem = {
 type BillingRecord = {
   id?: string;
   items?: BillingItem[];
+  customer_id?: unknown;
+  title?: unknown;
+  status?: unknown;
+  quote_number?: unknown;
+  invoice_number?: unknown;
+  issue_date?: unknown;
+  due_date?: unknown;
+  valid_until?: unknown;
+  payment_terms?: unknown;
+  currency?: unknown;
+  tax_rate?: unknown;
+  total_amount?: unknown;
+  notes?: unknown;
 } & object;
 
 function asEntry(record: BillingRecord) {
