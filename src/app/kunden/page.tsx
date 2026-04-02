@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import Papa from "papaparse";
 import { Download, Upload } from "lucide-react";
 
@@ -67,24 +68,24 @@ export default function CustomersPage() {
           onUpdate={resource.update}
           records={resource.records}
           rowActions={(record) => (
-            <a
+            <Link
               className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
               href={`/api/export/data-subject/${record.id}`}
             >
               <Download className="h-4 w-4" />
               DSGVO
-            </a>
+            </Link>
           )}
           topActions={
             <>
-              <a
+              <Link
                 className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800"
                 href="/api/export/customers/csv"
               >
                 <Download className="h-4 w-4" />
                 CSV Export
-              </a>
-              <a
+              </Link>
+              <Link
                 className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800"
                 href="/kunden/druck"
                 rel="noreferrer"
@@ -92,7 +93,7 @@ export default function CustomersPage() {
               >
                 <Download className="h-4 w-4" />
                 PDF Ansicht
-              </a>
+              </Link>
               <label className="focus-ring inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800">
                 <Upload className="h-4 w-4" />
                 CSV Import

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { addDays, endOfMonth, endOfWeek, format, isSameDay, isSameMonth, startOfMonth, startOfWeek } from "date-fns";
 import { de } from "date-fns/locale";
 import { CalendarDays, ChevronLeft, ChevronRight, Plus, Trash2 } from "lucide-react";
@@ -175,13 +176,13 @@ export function CalendarModulePage({
               <Button onClick={() => setView("day")} variant="ghost">
                 Tag
               </Button>
-              <a
+              <Link
                 className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800"
                 href="/api/export/calendar/ical"
               >
                 <CalendarDays className="h-4 w-4" />
                 iCal Export
-              </a>
+              </Link>
               <Button onClick={openCreate} variant="secondary">
                 <Plus className="h-4 w-4" />
                 Termin anlegen

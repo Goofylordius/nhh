@@ -41,13 +41,13 @@ export default function DashboardPage() {
     <AppShell
       actions={
         <>
-          <a
+          <Link
             className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800"
             href="/api/export/customers/csv"
           >
             <Download className="h-4 w-4" />
             Kunden CSV
-          </a>
+          </Link>
           <Link
             className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-mint-500 px-4 py-2.5 text-sm font-semibold text-white"
             href="/einstellungen"
