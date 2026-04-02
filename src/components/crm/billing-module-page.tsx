@@ -213,14 +213,14 @@ export function BillingModulePage({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Dokumente</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{records.length}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Dokumente</p>
+            <p className="mt-3 font-display text-4xl text-white">{records.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Volumen</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Volumen</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {euro(
                 records.reduce((sum, record) => sum + Number(asEntry(record).total_amount ?? 0), 0),
               )}
@@ -229,8 +229,8 @@ export function BillingModulePage({
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">{resource === "quotes" ? "Angenommen" : "Bezahlt"}</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">{resource === "quotes" ? "Angenommen" : "Bezahlt"}</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {
                 records.filter((record) => {
                   const entry = asEntry(record);
@@ -244,8 +244,8 @@ export function BillingModulePage({
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Offen</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Offen</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {
                 records.filter((record) =>
                   !["bezahlt", "storniert", "verloren"].includes(
@@ -278,13 +278,13 @@ export function BillingModulePage({
         />
         <CardContent className="space-y-4">
           {error ? (
-            <div className="rounded-2xl border border-clay-200 bg-clay-50 px-4 py-3 text-sm text-clay-900">
+            <div className="rounded-2xl border border-clay-400/20 bg-clay-500/12 px-4 py-3 text-sm text-clay-100">
               {error}
             </div>
           ) : null}
 
           {loading ? (
-            <div className="rounded-3xl border border-dashed border-ink-200 bg-ink-50 p-10 text-center text-sm text-ink-600">
+            <div className="rounded-3xl border border-dashed border-white/10 bg-white/3 p-10 text-center text-sm text-slate-300">
               Daten werden geladen...
             </div>
           ) : filteredRecords.length === 0 ? (
@@ -295,9 +295,9 @@ export function BillingModulePage({
               title={`Keine ${label}`}
             />
           ) : (
-            <div className="overflow-x-auto rounded-3xl border border-ink-100">
-              <table className="min-w-full divide-y divide-ink-100 text-left text-sm">
-                <thead className="bg-ink-50 text-ink-700">
+            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-white/3">
+              <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+                <thead className="bg-white/[0.03] text-slate-300">
                   <tr>
                     <th className="px-4 py-3 font-semibold">{singular}</th>
                     <th className="px-4 py-3 font-semibold">Kunde</th>
@@ -307,7 +307,7 @@ export function BillingModulePage({
                     <th className="px-4 py-3 font-semibold text-right">Aktionen</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-100 bg-white">
+                <tbody className="divide-y divide-white/6 bg-transparent">
                   {filteredRecords.map((record) => {
                     const entry = asEntry(record);
                     const customer = bootstrap?.customers.find(
@@ -317,8 +317,8 @@ export function BillingModulePage({
                     return (
                       <tr key={String(entry.id)}>
                         <td className="px-4 py-3">
-                          <div className="font-semibold text-ink-900">{String(entry.title ?? "-")}</div>
-                          <div className="text-xs text-ink-600">
+                          <div className="font-semibold text-white">{String(entry.title ?? "-")}</div>
+                          <div className="text-xs text-slate-400">
                             {String(entry.quote_number ?? entry.invoice_number ?? "-")}
                           </div>
                         </td>
@@ -345,7 +345,7 @@ export function BillingModulePage({
                             </Button>
                             <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
                               <Trash2 className="h-4 w-4" />
-                              Loeschen
+                              Löschen
                             </Button>
                           </div>
                         </td>
@@ -368,12 +368,12 @@ export function BillingModulePage({
       >
         <div className="grid gap-4 lg:grid-cols-2">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Kunde</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Kunde</label>
             <Select
               onChange={(event) => setValue("customer_id", event.target.value)}
               value={String(draftEntry?.customer_id ?? "")}
             >
-              <option value="">Bitte waehlen</option>
+              <option value="">Bitte wählen</option>
               {(bootstrap?.customers ?? []).map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.company_name}
@@ -382,14 +382,14 @@ export function BillingModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Titel</label>
             <Input
               onChange={(event) => setValue("title", event.target.value)}
               value={String(draftEntry?.title ?? "")}
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Status</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Status</label>
             <Select
               onChange={(event) => setValue("status", event.target.value)}
               value={String(draftEntry?.status ?? "entwurf")}
@@ -402,7 +402,7 @@ export function BillingModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Ausstellungsdatum</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Ausstellungsdatum</label>
             <Input
               onChange={(event) => setValue("issue_date", event.target.value)}
               type="date"
@@ -410,7 +410,7 @@ export function BillingModulePage({
             />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">
+            <label className="mb-2 block text-sm font-semibold text-slate-200">
               {resource === "quotes" ? "Gueltig bis" : "Faellig am"}
             </label>
             <Input
@@ -426,7 +426,7 @@ export function BillingModulePage({
             />
           </div>
           <div className="lg:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Zahlungsbedingungen</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Zahlungsbedingungen</label>
             <Input
               onChange={(event) => setValue("payment_terms", event.target.value)}
               value={String(draftEntry?.payment_terms ?? "")}
@@ -436,7 +436,7 @@ export function BillingModulePage({
 
         <div className="mt-6">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="font-display text-2xl text-ink-900">Positionen</h3>
+            <h3 className="font-display text-2xl text-white">Positionen</h3>
             <Button onClick={addItem} variant="ghost">
               <Plus className="h-4 w-4" />
               Position
@@ -445,7 +445,7 @@ export function BillingModulePage({
           <div className="space-y-3">
             {(draft?.items ?? []).map((item, index) => (
               <div
-                className="grid gap-3 rounded-3xl border border-ink-100 bg-ink-50 p-4 lg:grid-cols-[1.8fr,0.6fr,0.8fr,0.6fr,auto]"
+                className="grid gap-3 rounded-3xl border border-white/10 bg-white/4 p-4 lg:grid-cols-[1.8fr,0.6fr,0.8fr,0.6fr,auto]"
                 key={`${index}-${String(item.description)}`}
               >
                 <Input
@@ -484,22 +484,22 @@ export function BillingModulePage({
 
         <div className="mt-6 grid gap-4 lg:grid-cols-[1fr,320px]">
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Notizen</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Notizen</label>
             <Textarea
               onChange={(event) => setValue("notes", event.target.value)}
               value={String(draftEntry?.notes ?? "")}
             />
           </div>
-          <div className="rounded-3xl border border-ink-100 bg-ink-50 p-5">
-            <div className="flex items-center justify-between text-sm text-ink-700">
+          <div className="rounded-3xl border border-white/10 bg-white/4 p-5">
+            <div className="flex items-center justify-between text-sm text-slate-300">
               <span>Zwischensumme</span>
               <span>{euro(totals.subtotal)}</span>
             </div>
-            <div className="mt-3 flex items-center justify-between text-sm text-ink-700">
+            <div className="mt-3 flex items-center justify-between text-sm text-slate-300">
               <span>MwSt</span>
               <span>{euro(totals.taxAmount)}</span>
             </div>
-            <div className="mt-3 flex items-center justify-between font-display text-2xl text-ink-900">
+            <div className="mt-3 flex items-center justify-between font-display text-2xl text-white">
               <span>Gesamt</span>
               <span>{euro(totals.total)}</span>
             </div>

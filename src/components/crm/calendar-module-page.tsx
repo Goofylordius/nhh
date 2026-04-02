@@ -155,26 +155,26 @@ export function CalendarModulePage({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Termine</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{stats.total}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Termine</p>
+            <p className="mt-3 font-display text-4xl text-white">{stats.total}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Diese Woche</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{stats.thisWeek}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Diese Woche</p>
+            <p className="mt-3 font-display text-4xl text-white">{stats.thisWeek}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Wiederkehrend</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{stats.recurring}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Wiederkehrend</p>
+            <p className="mt-3 font-display text-4xl text-white">{stats.recurring}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Verknuepft</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{stats.linked}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Verknüpft</p>
+            <p className="mt-3 font-display text-4xl text-white">{stats.linked}</p>
           </CardContent>
         </Card>
       </div>
@@ -193,7 +193,7 @@ export function CalendarModulePage({
                 Tag
               </Button>
               <Link
-                className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-4 py-2.5 text-sm font-semibold text-ink-800"
+                className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/5 px-4 py-2.5 text-sm font-semibold text-slate-100 transition hover:bg-white/10"
                 href="/api/export/calendar/ical"
               >
                 <CalendarDays className="h-4 w-4" />
@@ -210,12 +210,12 @@ export function CalendarModulePage({
         />
         <CardContent className="space-y-4">
           {error ? (
-            <div className="rounded-2xl border border-clay-200 bg-clay-50 px-4 py-3 text-sm text-clay-900">
+            <div className="rounded-2xl border border-clay-400/20 bg-clay-500/12 px-4 py-3 text-sm text-clay-100">
               {error}
             </div>
           ) : null}
           {loading ? (
-            <div className="rounded-3xl border border-dashed border-ink-200 bg-ink-50 p-10 text-center text-sm text-ink-600">
+            <div className="rounded-3xl border border-dashed border-white/10 bg-white/3 p-10 text-center text-sm text-slate-300">
               Daten werden geladen...
             </div>
           ) : records.length === 0 ? (
@@ -231,14 +231,14 @@ export function CalendarModulePage({
                 <Button onClick={() => setCurrentMonth((current) => addDays(startOfMonth(current), -1))} variant="ghost">
                   <ChevronLeft className="h-4 w-4" />
                 </Button>
-                <h3 className="font-display text-3xl text-ink-900">
+                <h3 className="font-display text-3xl text-white">
                   {format(currentMonth, "LLLL yyyy", { locale: de })}
                 </h3>
                 <Button onClick={() => setCurrentMonth((current) => addDays(endOfMonth(current), 1))} variant="ghost">
                   <ChevronRight className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="grid grid-cols-7 gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-ink-500">
+              <div className="grid grid-cols-7 gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
                 {["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"].map((label) => (
                   <div key={label}>{label}</div>
                 ))}
@@ -247,7 +247,9 @@ export function CalendarModulePage({
                 {groupedByDay.map(({ day, events }) => (
                   <div
                     className={`min-h-[180px] rounded-3xl border p-3 ${
-                      isSameMonth(day, currentMonth) ? "bg-white" : "bg-ink-50 text-ink-500"
+                      isSameMonth(day, currentMonth)
+                        ? "border-white/10 bg-white/[0.04]"
+                        : "border-white/6 bg-white/[0.02] text-slate-500"
                     }`}
                     key={day.toISOString()}
                     onDragOver={(event) => {
@@ -278,7 +280,7 @@ export function CalendarModulePage({
                       });
                     }}
                   >
-                    <div className="mb-3 text-sm font-semibold text-ink-900">
+                    <div className="mb-3 text-sm font-semibold text-white">
                       {format(day, "d")}
                     </div>
                     <div className="space-y-2">
@@ -287,7 +289,7 @@ export function CalendarModulePage({
 
                         return (
                           <button
-                            className="w-full rounded-2xl bg-mint-50 px-3 py-2 text-left text-xs font-medium text-mint-900"
+                            className="w-full rounded-2xl border border-mint-400/12 bg-mint-500/10 px-3 py-2 text-left text-xs font-medium text-mint-100 transition hover:bg-mint-500/16"
                             draggable
                             key={String(entry.id)}
                             onClick={() => openEdit(event)}
@@ -297,7 +299,7 @@ export function CalendarModulePage({
                             type="button"
                           >
                             <div>{String(entry.title ?? "Termin")}</div>
-                            <div className="mt-1 text-[11px] opacity-80">
+                            <div className="mt-1 text-[11px] text-mint-200/80">
                               {format(new Date(String(entry.starts_at)), "HH:mm")}
                             </div>
                           </button>
@@ -313,22 +315,22 @@ export function CalendarModulePage({
               {groupedByDay.slice(0, 7).map(({ day, events }) => (
                 <Card key={day.toISOString()}>
                   <CardContent className="p-4">
-                    <p className="text-xs uppercase tracking-[0.2em] text-ink-500">{format(day, "EEE", { locale: de })}</p>
-                    <h3 className="mt-2 font-display text-2xl text-ink-900">{format(day, "d. MMM", { locale: de })}</h3>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-500">{format(day, "EEE", { locale: de })}</p>
+                    <h3 className="mt-2 font-display text-2xl text-white">{format(day, "d. MMM", { locale: de })}</h3>
                     <div className="mt-4 space-y-2">
-                      {events.length === 0 ? <p className="text-sm text-ink-500">Keine Termine</p> : null}
+                      {events.length === 0 ? <p className="text-sm text-slate-500">Keine Termine</p> : null}
                       {events.map((event) => {
                         const entry = asCalendarEntry(event);
 
                         return (
                           <button
-                            className="w-full rounded-2xl border border-ink-100 bg-white px-3 py-2 text-left"
+                            className="w-full rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 text-left transition hover:bg-white/[0.06]"
                             key={String(entry.id)}
                             onClick={() => openEdit(event)}
                             type="button"
                           >
-                            <div className="font-medium text-ink-900">{String(entry.title ?? "Termin")}</div>
-                            <div className="text-xs text-ink-600">
+                            <div className="font-medium text-white">{String(entry.title ?? "Termin")}</div>
+                            <div className="text-xs text-slate-400">
                               {format(new Date(String(entry.starts_at)), "HH:mm")} - {format(new Date(String(entry.ends_at)), "HH:mm")}
                             </div>
                           </button>
@@ -352,8 +354,8 @@ export function CalendarModulePage({
                     <Card key={String(entry.id)}>
                       <CardContent className="flex items-center justify-between gap-4 p-5">
                         <div>
-                          <h3 className="font-semibold text-ink-900">{String(entry.title ?? "Termin")}</h3>
-                          <p className="text-sm text-ink-600">
+                          <h3 className="font-semibold text-white">{String(entry.title ?? "Termin")}</h3>
+                          <p className="text-sm text-slate-400">
                             {format(new Date(String(entry.starts_at)), "HH:mm")} - {format(new Date(String(entry.ends_at)), "HH:mm")}
                           </p>
                         </div>
@@ -377,27 +379,27 @@ export function CalendarModulePage({
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Titel</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), title: event.target.value }))} value={String(draftEntry?.title ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Typ</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Typ</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), event_type: event.target.value }))} value={String(draftEntry?.event_type ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Ort</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Ort</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), location: event.target.value }))} value={String(draftEntry?.location ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Start</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Start</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), starts_at: event.target.value }))} type="datetime-local" value={String(draftEntry?.starts_at ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Ende</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Ende</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), ends_at: event.target.value }))} type="datetime-local" value={String(draftEntry?.ends_at ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Kunde</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Kunde</label>
             <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), customer_id: event.target.value }))} value={String(draftEntry?.customer_id ?? "")}>
               <option value="">Kein Kunde</option>
               {(bootstrap?.customers ?? []).map((customer) => (
@@ -408,7 +410,7 @@ export function CalendarModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Projekt</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Projekt</label>
             <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), project_id: event.target.value }))} value={String(draftEntry?.project_id ?? "")}>
               <option value="">Kein Projekt</option>
               {(bootstrap?.projects ?? []).map((project) => (
@@ -419,15 +421,15 @@ export function CalendarModulePage({
             </Select>
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Teilnehmer</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Teilnehmer</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), participants: event.target.value }))} value={String(draftEntry?.participants ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Erinnerung in Minuten</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Erinnerung in Minuten</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), reminder_minutes: event.target.value }))} type="number" value={String(draftEntry?.reminder_minutes ?? "")} />
           </div>
           <div>
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Wiederholung</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Wiederholung</label>
             <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), recurrence_rule: event.target.value }))} value={String(draftEntry?.recurrence_rule ?? "")}>
               {recurrenceOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -437,7 +439,7 @@ export function CalendarModulePage({
             </Select>
           </div>
           <div className="sm:col-span-2">
-            <label className="mb-2 block text-sm font-semibold text-ink-800">Beschreibung</label>
+            <label className="mb-2 block text-sm font-semibold text-slate-200">Beschreibung</label>
             <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), description: event.target.value }))} value={String(draftEntry?.description ?? "")} />
           </div>
         </div>
@@ -445,7 +447,7 @@ export function CalendarModulePage({
           {draftEntry?.id ? (
             <Button onClick={() => void onDelete(String(draftEntry.id))} variant="danger">
               <Trash2 className="h-4 w-4" />
-              Loeschen
+              Löschen
             </Button>
           ) : <span />}
           <div className="flex gap-2">

@@ -24,8 +24,8 @@ export function CardHeader({
   return (
     <div className={cn("flex flex-col gap-3 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-start sm:justify-between", className)}>
       <div className="min-w-0 flex-1">
-        <h2 className="break-words font-display text-2xl leading-tight text-white">{title}</h2>
-        {description ? <p className="mt-1 text-sm text-slate-300">{description}</p> : null}
+        <h2 className="break-words font-display text-[1.9rem] leading-tight text-white">{title}</h2>
+        {description ? <p className="mt-2 text-sm leading-7 text-slate-300">{description}</p> : null}
       </div>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>

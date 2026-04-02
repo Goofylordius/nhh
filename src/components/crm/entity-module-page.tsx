@@ -61,12 +61,12 @@ function renderField(
   if (field.type === "select") {
     const options = fieldOptions(field, bootstrap);
     return (
-      <Select
-        {...sharedProps}
-        onChange={(event) => onChange(field.key, event.target.value)}
-        value={String(value ?? "")}
-      >
-        <option value="">Bitte waehlen</option>
+        <Select
+          {...sharedProps}
+          onChange={(event) => onChange(field.key, event.target.value)}
+          value={String(value ?? "")}
+        >
+        <option value="">Bitte wählen</option>
         {options.map((option) => (
           <option key={option.value} value={option.value}>
             {option.label}
@@ -78,10 +78,10 @@ function renderField(
 
   if (field.type === "checkbox") {
     return (
-      <label className="flex items-center gap-3 rounded-2xl border border-ink-200 bg-ink-50 px-4 py-3 text-sm font-medium text-ink-900">
+      <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-medium text-slate-100">
         <input
           checked={Boolean(value)}
-          className="h-4 w-4 rounded border-ink-300"
+          className="h-4 w-4 rounded border-white/20 bg-slate-950"
           onChange={(event) => onChange(field.key, event.target.checked)}
           type="checkbox"
         />
@@ -236,10 +236,10 @@ export function EntityModulePage({
     <div className="space-y-4">
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         {config.stats.map((stat) => (
-          <Card key={stat.label}>
-            <CardContent className="p-5">
-              <p className="text-sm text-ink-600">{stat.label}</p>
-              <p className="mt-2 font-display text-4xl text-ink-900">
+          <Card className="overflow-hidden" key={stat.label}>
+            <CardContent className="bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,255,255,0.01))] p-5">
+              <p className="text-sm uppercase tracking-[0.18em] text-slate-400">{stat.label}</p>
+              <p className="mt-3 font-display text-4xl text-white">
                 {stat.getValue(records as Array<Record<string, unknown>>)}
               </p>
             </CardContent>
@@ -282,7 +282,7 @@ export function EntityModulePage({
         <CardContent className="space-y-4">
           <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
             <div className="relative flex-1">
-              <Search className="pointer-events-none absolute left-4 top-3.5 h-4 w-4 text-ink-400" />
+              <Search className="pointer-events-none absolute left-4 top-3.5 h-4 w-4 text-slate-500" />
               <Input
                 className="pl-11"
                 onChange={(event) => setSearchTerm(event.target.value)}
@@ -292,7 +292,7 @@ export function EntityModulePage({
             </div>
             {config.filterKey ? (
               <div className="flex min-w-[240px] items-center gap-2">
-                <Filter className="h-4 w-4 text-ink-500" />
+                <Filter className="h-4 w-4 text-slate-500" />
                 <Select onChange={(event) => setFilterValue(event.target.value)} value={filterValue}>
                   <option value="">Alle</option>
                   {(config.fields.find((field) => field.key === config.filterKey)?.options ?? []).map(
@@ -308,13 +308,13 @@ export function EntityModulePage({
           </div>
 
           {error ? (
-            <div className="rounded-2xl border border-clay-200 bg-clay-50 px-4 py-3 text-sm text-clay-900">
+            <div className="rounded-2xl border border-clay-400/20 bg-clay-500/12 px-4 py-3 text-sm text-clay-100">
               {error}
             </div>
           ) : null}
 
           {loading ? (
-            <div className="rounded-3xl border border-dashed border-ink-200 bg-ink-50 p-10 text-center text-sm text-ink-600">
+            <div className="rounded-3xl border border-dashed border-white/10 bg-white/3 p-10 text-center text-sm text-slate-300">
               Daten werden geladen...
             </div>
           ) : filteredRecords.length === 0 ? (
@@ -334,7 +334,7 @@ export function EntityModulePage({
 
                   return (
                     <>
-                      <p>{entry.owner_name ? `Owner: ${String(entry.owner_name)}` : "Ohne Owner"}</p>
+                      <p>{entry.owner_name ? `Verantwortlich: ${String(entry.owner_name)}` : "Nicht zugewiesen"}</p>
                       {entry.expected_close_date ? (
                         <p>Abschluss: {String(entry.expected_close_date)}</p>
                       ) : null}
@@ -350,9 +350,9 @@ export function EntityModulePage({
               valueKey={config.resource === "opportunities" ? "expected_value" : undefined}
             />
           ) : (
-            <div className="overflow-x-auto rounded-3xl border border-ink-100">
-              <table className="min-w-full divide-y divide-ink-100 text-left text-sm">
-                <thead className="bg-ink-50 text-ink-700">
+            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-white/3">
+              <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+                <thead className="bg-white/[0.03] text-slate-300">
                   <tr>
                     {config.columns.map((column) => (
                       <th className="px-4 py-3 font-semibold" key={column.key} scope="col">
@@ -364,14 +364,14 @@ export function EntityModulePage({
                     </th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-100 bg-white">
+                <tbody className="divide-y divide-white/6 bg-transparent">
                   {filteredRecords.map((record) => {
                     const entry = record as Record<string, unknown>;
 
                     return (
-                      <tr className="align-top" key={String(entry.id)}>
+                      <tr className="align-top transition hover:bg-white/[0.03]" key={String(entry.id)}>
                         {config.columns.map((column) => (
-                          <td className="max-w-[260px] px-4 py-3 text-ink-800" key={column.key}>
+                          <td className="max-w-[260px] px-4 py-3 text-slate-100" key={column.key}>
                             {column.render ? column.render(entry, bootstrap) : String(entry[column.key] ?? "-")}
                           </td>
                         ))}
@@ -383,7 +383,7 @@ export function EntityModulePage({
                             </Button>
                             <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
                               <Trash2 className="h-4 w-4" />
-                              Loeschen
+                              Löschen
                             </Button>
                           </div>
                         </td>
@@ -407,7 +407,7 @@ export function EntityModulePage({
           {config.fields.map((field) => (
             <div className={field.gridSpan === "full" ? "sm:col-span-2" : ""} key={field.key}>
               {field.type !== "checkbox" ? (
-                <label className="mb-2 block text-sm font-semibold text-ink-800" htmlFor={field.key}>
+                <label className="mb-2 block text-sm font-semibold text-slate-200" htmlFor={field.key}>
                   {field.label}
                 </label>
               ) : null}

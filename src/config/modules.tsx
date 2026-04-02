@@ -79,11 +79,11 @@ function toneFromStatus(value: string) {
     return "success" as const;
   }
 
-  if (["kritisch", "verloren", "ueberfaellig", "storniert"].includes(value)) {
+  if (["kritisch", "verloren", "überfällig", "storniert"].includes(value)) {
     return "danger" as const;
   }
 
-  if (["lead", "neu", "offen", "geplant", "faellig"].includes(value)) {
+  if (["lead", "neu", "offen", "geplant", "fällig"].includes(value)) {
     return "warning" as const;
   }
 
@@ -205,7 +205,7 @@ export const moduleConfigs: Record<
     label: "Kontakte",
     singular: "Kontakt",
     description:
-      "Mehrere Kontaktpersonen je Kunde mit Schnellaktionen fuers Tagesgeschaeft.",
+      "Mehrere Kontaktpersonen je Kunde mit Schnellaktionen fürs Tagesgeschäft.",
     defaultValues: {
       is_primary: false,
     },
@@ -213,7 +213,7 @@ export const moduleConfigs: Record<
     stats: [
       { label: "Gesamt", getValue: (records) => records.length },
       {
-        label: "Primaer",
+        label: "Primär",
         getValue: (records) =>
           records.filter((record) => Boolean(record.is_primary)).length,
       },
@@ -361,7 +361,7 @@ export const moduleConfigs: Record<
       },
       { key: "probability", label: "Wahrscheinlichkeit %", type: "number" },
       { key: "expected_value", label: "Erwarteter Umsatz", type: "currency" },
-      { key: "actual_value", label: "Tatsaechlicher Umsatz", type: "currency" },
+      { key: "actual_value", label: "Tatsächlicher Umsatz", type: "currency" },
       { key: "owner_name", label: "Verantwortlich", type: "text" },
       { key: "expected_close_date", label: "Geplanter Abschluss", type: "date" },
       { key: "tags", label: "Tags", type: "tags", gridSpan: "full" },
@@ -408,7 +408,7 @@ export const moduleConfigs: Record<
     resource: "projects",
     label: "Projekte",
     singular: "Projekt",
-    description: "Status, Phasen, Budget und Fortschritt fuer aktive Auftragsarbeiten.",
+    description: "Status, Phasen, Budget und Fortschritt für aktive Auftragsarbeiten.",
     defaultValues: {
       status: "geplant",
       priority: "mittel",
@@ -454,7 +454,7 @@ export const moduleConfigs: Record<
       },
       { key: "title", label: "Projekt", type: "text", required: true },
       { key: "status", label: "Status", type: "select", options: projectStatusOptions },
-      { key: "priority", label: "Prioritaet", type: "select", options: priorityOptions },
+      { key: "priority", label: "Priorität", type: "select", options: priorityOptions },
       { key: "phase", label: "Phase", type: "text" },
       { key: "owner_name", label: "Verantwortlich", type: "text" },
       { key: "start_date", label: "Start", type: "date" },
@@ -484,7 +484,7 @@ export const moduleConfigs: Record<
       },
       {
         key: "priority",
-        label: "Prioritaet",
+        label: "Priorität",
         render: (record) => (
           <Badge tone={String(record.priority) === "kritisch" ? "danger" : "default"}>
             {String(record.priority ?? "-")}
@@ -527,7 +527,7 @@ export const moduleConfigs: Record<
           records.filter((record) => record.status === "offen").length,
       },
       {
-        label: "Heute faellig",
+        label: "Heute fällig",
         getValue: (records) => {
           const today = new Date().toISOString().slice(0, 10);
           return records.filter((record) => String(record.due_date ?? "").startsWith(today))
@@ -558,7 +558,7 @@ export const moduleConfigs: Record<
         valueKey: "id",
       },
       { key: "title", label: "Aufgabe", type: "text", required: true },
-      { key: "priority", label: "Prioritaet", type: "select", options: priorityOptions },
+      { key: "priority", label: "Priorität", type: "select", options: priorityOptions },
       { key: "status", label: "Status", type: "select", options: taskStatusOptions },
       { key: "owner_name", label: "Verantwortlich", type: "text" },
       { key: "due_date", label: "Faelligkeit", type: "datetime-local" },
@@ -588,7 +588,7 @@ export const moduleConfigs: Record<
       },
       {
         key: "priority",
-        label: "Prioritaet",
+        label: "Priorität",
         render: (record) => (
           <Badge tone={String(record.priority) === "kritisch" ? "danger" : "default"}>
             {String(record.priority ?? "-")}
@@ -606,9 +606,9 @@ export const moduleConfigs: Record<
   },
   activities: {
     resource: "activities",
-    label: "Aktivitaeten",
-    singular: "Aktivitaet",
-    description: "Chronologischer Kundenfeed fuer Anrufe, Meetings, Mails und Notizen.",
+    label: "Aktivitäten",
+    singular: "Aktivität",
+    description: "Chronologischer Kundenfeed für Anrufe, Meetings, Mails und Notizen.",
     defaultValues: {
       activity_type: "notiz",
       starts_at: new Date().toISOString().slice(0, 16),
@@ -700,7 +700,7 @@ export const moduleConfigs: Record<
     resource: "settings",
     label: "Einstellungen",
     singular: "Einstellung",
-    description: "Firmendaten, Tags, Pipeline-Stages und Stammdaten fuer den Demo-Betrieb.",
+    description: "Firmendaten, Tags, Pipeline-Stages und Stammdaten für den Demo-Betrieb.",
     defaultValues: {
       setting_group: "firma",
       setting_value: {
@@ -710,7 +710,7 @@ export const moduleConfigs: Record<
     searchKeys: ["setting_group", "setting_key", "description"],
     filterKey: "setting_group",
     stats: [
-      { label: "Eintraege", getValue: (records) => records.length },
+      { label: "Einträge", getValue: (records) => records.length },
       {
         label: "Gruppen",
         getValue: (records) =>
@@ -729,7 +729,7 @@ export const moduleConfigs: Record<
     ],
     fields: [
       { key: "setting_group", label: "Gruppe", type: "text", required: true },
-      { key: "setting_key", label: "Schluessel", type: "text", required: true },
+      { key: "setting_key", label: "Schlüssel", type: "text", required: true },
       { key: "description", label: "Beschreibung", type: "text", gridSpan: "full" },
       {
         key: "setting_value",
@@ -741,7 +741,7 @@ export const moduleConfigs: Record<
     ],
     columns: [
       { key: "setting_group", label: "Gruppe" },
-      { key: "setting_key", label: "Schluessel" },
+      { key: "setting_key", label: "Schlüssel" },
       {
         key: "setting_value",
         label: "Wert",

@@ -82,14 +82,14 @@ export function DocumentsModulePage({
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Dokumente</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">{records.length}</p>
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Dokumente</p>
+            <p className="mt-3 font-display text-4xl text-white">{records.length}</p>
           </CardContent>
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Mit Kunde</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Mit Kunde</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {
                 records.filter((record) => Boolean((record as Record<string, unknown>).customer_id))
                   .length
@@ -99,8 +99,8 @@ export function DocumentsModulePage({
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Mit Projekt</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Mit Projekt</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {
                 records.filter((record) => Boolean((record as Record<string, unknown>).project_id))
                   .length
@@ -110,8 +110,8 @@ export function DocumentsModulePage({
         </Card>
         <Card>
           <CardContent className="p-5">
-            <p className="text-sm text-ink-600">Speicher</p>
-            <p className="mt-2 font-display text-4xl text-ink-900">
+            <p className="text-sm uppercase tracking-[0.18em] text-slate-400">Speicher</p>
+            <p className="mt-3 font-display text-4xl text-white">
               {(
                 records.reduce(
                   (sum, record) => sum + Number((record as Record<string, unknown>).file_size ?? 0),
@@ -139,13 +139,13 @@ export function DocumentsModulePage({
         />
         <CardContent className="space-y-4">
           {error ? (
-            <div className="rounded-2xl border border-clay-200 bg-clay-50 px-4 py-3 text-sm text-clay-900">
+            <div className="rounded-2xl border border-clay-400/20 bg-clay-500/12 px-4 py-3 text-sm text-clay-100">
               {error}
             </div>
           ) : null}
 
           {loading ? (
-            <div className="rounded-3xl border border-dashed border-ink-200 bg-ink-50 p-10 text-center text-sm text-ink-600">
+            <div className="rounded-3xl border border-dashed border-white/10 bg-white/3 p-10 text-center text-sm text-slate-300">
               Daten werden geladen...
             </div>
           ) : records.length === 0 ? (
@@ -156,9 +156,9 @@ export function DocumentsModulePage({
               title="Keine Dokumente"
             />
           ) : (
-            <div className="overflow-x-auto rounded-3xl border border-ink-100">
-              <table className="min-w-full divide-y divide-ink-100 text-left text-sm">
-                <thead className="bg-ink-50 text-ink-700">
+            <div className="overflow-x-auto rounded-3xl border border-white/10 bg-white/3">
+              <table className="min-w-full divide-y divide-white/10 text-left text-sm">
+                <thead className="bg-white/[0.03] text-slate-300">
                   <tr>
                     <th className="px-4 py-3 font-semibold">Titel</th>
                     <th className="px-4 py-3 font-semibold">Kategorie</th>
@@ -168,14 +168,14 @@ export function DocumentsModulePage({
                     <th className="px-4 py-3 font-semibold text-right">Aktionen</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-ink-100 bg-white">
+                <tbody className="divide-y divide-white/6 bg-transparent">
                   {records.map((record) => {
                     const entry = record as Record<string, unknown>;
 
                     return (
                       <tr key={String(entry.id)}>
-                        <td className="px-4 py-3">{String(entry.title ?? "-")}</td>
-                        <td className="px-4 py-3">{String(entry.category ?? "-")}</td>
+                        <td className="px-4 py-3 text-slate-100">{String(entry.title ?? "-")}</td>
+                        <td className="px-4 py-3 text-slate-300">{String(entry.category ?? "-")}</td>
                         <td className="px-4 py-3">
                           {bootstrap?.customers.find((customer) => customer.id === entry.customer_id)?.company_name ?? "-"}
                         </td>
@@ -183,15 +183,15 @@ export function DocumentsModulePage({
                           {bootstrap?.projects.find((project) => project.id === entry.project_id)?.title ?? "-"}
                         </td>
                         <td className="px-4 py-3">
-                          <div className="font-medium text-ink-900">{String(entry.file_name ?? "-")}</div>
-                          <div className="text-xs text-ink-600">
+                          <div className="font-medium text-white">{String(entry.file_name ?? "-")}</div>
+                          <div className="text-xs text-slate-400">
                             {(Number(entry.file_size ?? 0) / 1024).toFixed(1)} KB
                           </div>
                         </td>
                         <td className="px-4 py-3">
                           <div className="flex justify-end gap-2">
                             <Link
-                              className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
+                              className="focus-ring inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/8 px-3 py-2 text-sm font-semibold text-slate-100"
                               href={`/api/documents/${entry.id}/download`}
                             >
                               <Download className="h-4 w-4" />
@@ -208,7 +208,7 @@ export function DocumentsModulePage({
                             </Button>
                             <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
                               <Trash2 className="h-4 w-4" />
-                              Loeschen
+                              Löschen
                             </Button>
                           </div>
                         </td>

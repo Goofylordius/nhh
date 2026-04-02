@@ -11,7 +11,7 @@ export default function ActivitiesPage() {
   return (
     <AppShell
       description="Kundenhistorie fuer Anrufe, Meetings, Mails und Schnellnotizen."
-      title="Aktivitaeten"
+      title="Aktivitäten"
     >
       <EntityModulePage
         config={moduleConfigs.activities}

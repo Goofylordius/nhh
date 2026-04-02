@@ -36,17 +36,17 @@ export function KanbanBoard({
           (record) => (record as Record<string, unknown>)[columnKey] === column.value,
         );
         return (
-          <Card className="overflow-hidden" key={column.value}>
+          <Card className="overflow-hidden border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.015))]" key={column.value}>
             <CardContent className="space-y-3 p-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-ink-900">{column.label}</p>
-                  <p className="text-xs text-ink-600">{columnRecords.length} Eintraege</p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.18em] text-slate-300">{column.label}</p>
+                  <p className="text-xs text-slate-500">{columnRecords.length} Einträge</p>
                 </div>
                 <Badge>{column.label}</Badge>
               </div>
               <div
-                className="min-h-[180px] space-y-3 rounded-3xl border border-dashed border-ink-200 bg-ink-50/50 p-3"
+                className="min-h-[220px] space-y-3 rounded-[1.6rem] border border-dashed border-white/10 bg-black/10 p-3"
                 onDragOver={(event) => {
                   event.preventDefault();
                 }}
@@ -66,8 +66,8 @@ export function KanbanBoard({
 
                   return (
                     <article
-                      className={`rounded-2xl border border-white bg-white p-3 shadow-sm transition ${
-                        draggingId === entry.id ? "opacity-60" : ""
+                      className={`rounded-[1.35rem] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.055),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_40px_-28px_rgba(0,0,0,0.75)] transition ${
+                        draggingId === entry.id ? "scale-[0.99] opacity-60" : "hover:-translate-y-0.5 hover:border-mint-400/25 hover:bg-white/[0.06]"
                       }`}
                       draggable
                       key={String(entry.id)}
@@ -79,15 +79,15 @@ export function KanbanBoard({
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div>
-                          <h3 className="font-semibold text-ink-900">
+                          <h3 className="font-semibold text-white">
                             {String(entry[titleKey] ?? "Ohne Titel")}
                           </h3>
                           {metaRenderer ? (
-                            <div className="mt-2 text-xs text-ink-600">{metaRenderer(record)}</div>
+                            <div className="mt-2 space-y-1 text-xs text-slate-400">{metaRenderer(record)}</div>
                           ) : null}
                         </div>
                         {valueKey ? (
-                          <div className="text-right text-xs font-semibold text-mint-800">
+                          <div className="text-right text-xs font-semibold text-mint-200">
                             {euro(Number(entry[valueKey] ?? 0))}
                           </div>
                         ) : null}
