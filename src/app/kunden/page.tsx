@@ -9,6 +9,17 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { moduleConfigs } from "@/config/modules";
 import { useCrmResource } from "@/hooks/use-crm-resource";
+import type { CustomerStatus } from "@/types/crm";
+
+function normalizeCustomerStatus(value: string | undefined): CustomerStatus {
+  const normalized = (value ?? "lead").toLowerCase();
+
+  if (normalized === "aktiv" || normalized === "inaktiv") {
+    return normalized;
+  }
+
+  return "lead";
+}
 
 export default function CustomersPage() {
   const resource = useCrmResource("customers");
@@ -35,7 +46,7 @@ export default function CustomersPage() {
         phone: row.telefon ?? "",
         city: row.ort ?? "",
         industry: row.branche ?? "",
-        status: (row.status ?? "lead").toLowerCase(),
+        status: normalizeCustomerStatus(row.status),
         tags: row.tags?.split(",").map((entry) => entry.trim()) ?? [],
       });
     }
