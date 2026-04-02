@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent } from "react";
+import { useEffect, useRef } from "react";
 
 import { getBrowserSupabaseClient } from "@/lib/supabase/client";
 
@@ -8,10 +8,12 @@ export function useRealtimeRefresh(
   tables: string[],
   onChange: () => void | Promise<void>,
 ) {
-  const handleChange = useEffectEvent(async () => {
-    await onChange();
-  });
+  const onChangeRef = useRef(onChange);
   const tableKey = tables.join("|");
+
+  useEffect(() => {
+    onChangeRef.current = onChange;
+  }, [onChange]);
 
   useEffect(() => {
     const supabase = getBrowserSupabaseClient();
@@ -27,7 +29,7 @@ export function useRealtimeRefresh(
           table,
         },
         () => {
-          void handleChange();
+          void onChangeRef.current();
         },
       );
     }

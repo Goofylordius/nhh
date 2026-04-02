@@ -3,6 +3,9 @@
 import { BillingModulePage } from "@/components/crm/billing-module-page";
 import { AppShell } from "@/components/layout/app-shell";
 import { useCrmResource } from "@/hooks/use-crm-resource";
+import type { ResourceRecordMap } from "@/types/crm";
+
+type QuoteRecord = ResourceRecordMap["quotes"];
 
 export default function QuotesPage() {
   const quoteResource = useCrmResource("quotes");
@@ -35,9 +38,13 @@ export default function QuotesPage() {
             notes: typeof entry.notes === "string" ? entry.notes : undefined,
           });
         }}
-        onCreate={quoteResource.create}
+        onCreate={async (payload) => {
+          await quoteResource.create(payload as Partial<QuoteRecord>);
+        }}
         onDelete={quoteResource.remove}
-        onUpdate={quoteResource.update}
+        onUpdate={async (id, payload) => {
+          await quoteResource.update(id, payload as Partial<QuoteRecord>);
+        }}
         records={quoteResource.records}
         resource="quotes"
         singular="Angebot"
