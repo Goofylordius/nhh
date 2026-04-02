@@ -30,7 +30,9 @@ body {
 }
 
 .glass-panel {
-  @apply rounded-3xl border border-white/10 bg-slate-950/58 shadow-card backdrop-blur-xl;
+  @apply rounded-3xl border shadow-card backdrop-blur-xl;
+  border-color: rgb(255 255 255 / 0.1);
+  background-color: rgb(2 6 23 / 0.58);
 }
 
 .grid-paper {
