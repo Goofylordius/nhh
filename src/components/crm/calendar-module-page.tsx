@@ -17,6 +17,17 @@ import { useAppContext } from "@/providers/app-provider";
 
 type CalendarRecord = {
   id?: string;
+  title?: unknown;
+  event_type?: unknown;
+  starts_at?: unknown;
+  ends_at?: unknown;
+  participants?: unknown;
+  reminder_minutes?: unknown;
+  recurrence_rule?: unknown;
+  customer_id?: unknown;
+  project_id?: unknown;
+  location?: unknown;
+  description?: unknown;
 } & object;
 
 function asCalendarEntry(record: CalendarRecord) {
