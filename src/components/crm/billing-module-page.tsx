@@ -15,12 +15,23 @@ import { Textarea } from "@/components/ui/textarea";
 import { euro } from "@/lib/utils";
 import { useAppContext } from "@/providers/app-provider";
 
-type BillingRecord = Record<string, unknown> & {
-  id?: string;
-  items?: Array<Record<string, unknown>>;
-};
+type BillingItem = {
+  description?: unknown;
+  quantity?: unknown;
+  unit_price?: unknown;
+  tax_rate?: unknown;
+} & object;
 
-function calculateTotals(items: Array<Record<string, unknown>>, taxRate: number) {
+type BillingRecord = {
+  id?: string;
+  items?: BillingItem[];
+} & object;
+
+function asEntry(record: BillingRecord) {
+  return record as Record<string, unknown>;
+}
+
+function calculateTotals(items: BillingItem[], taxRate: number) {
   const subtotal = items.reduce((sum, item) => {
     return sum + Number(item.quantity ?? 0) * Number(item.unit_price ?? 0);
   }, 0);
@@ -66,15 +77,18 @@ export function BillingModulePage({
   const [search, setSearch] = useState("");
 
   const filteredRecords = useMemo(() => {
-    return records.filter((record) =>
-      [record.title, record.quote_number, record.invoice_number, record.status]
+    return records.filter((record) => {
+      const entry = asEntry(record);
+
+      return [entry.title, entry.quote_number, entry.invoice_number, entry.status]
         .join(" ")
         .toLowerCase()
-        .includes(search.toLowerCase()),
-    );
+        .includes(search.toLowerCase());
+    });
   }, [records, search]);
 
-  const totals = calculateTotals(draft?.items ?? [], Number(draft?.tax_rate ?? 19));
+  const draftEntry = draft ? asEntry(draft) : null;
+  const totals = calculateTotals(draft?.items ?? [], Number(draftEntry?.tax_rate ?? 19));
 
   const openCreate = () => {
     setDraft({
@@ -91,11 +105,12 @@ export function BillingModulePage({
   };
 
   const openEdit = (record: BillingRecord) => {
+    const entry = asEntry(record);
     setDraft({
       ...record,
       items:
-        Array.isArray(record.items) && record.items.length > 0
-          ? record.items
+        Array.isArray(entry.items) && entry.items.length > 0
+          ? (entry.items as BillingItem[])
           : [{ description: "", quantity: 1, unit_price: 0, tax_rate: 19 }],
     });
     setDialogOpen(true);
@@ -124,18 +139,22 @@ export function BillingModulePage({
   };
 
   const addItem = () => {
-    setDraft((current) => ({
-      ...(current ?? {}),
-      items: [
-        ...(current?.items ?? []),
-        {
-          description: "",
-          quantity: 1,
-          unit_price: 0,
-          tax_rate: Number(current?.tax_rate ?? 19),
-        },
-      ],
-    }));
+    setDraft((current) => {
+      const currentEntry = current ? asEntry(current) : null;
+
+      return {
+        ...(current ?? {}),
+        items: [
+          ...(current?.items ?? []),
+          {
+            description: "",
+            quantity: 1,
+            unit_price: 0,
+            tax_rate: Number(currentEntry?.tax_rate ?? 19),
+          },
+        ],
+      };
+    });
   };
 
   const removeItem = (index: number) => {
@@ -152,13 +171,14 @@ export function BillingModulePage({
 
     setSubmitting(true);
     try {
+      const currentDraftEntry = asEntry(draft);
       const payload = {
         ...draft,
         items: draft.items?.map((item) => ({
           description: item.description,
           quantity: Number(item.quantity ?? 0),
           unit_price: Number(item.unit_price ?? 0),
-          tax_rate: Number(item.tax_rate ?? draft.tax_rate ?? 19),
+          tax_rate: Number(item.tax_rate ?? currentDraftEntry.tax_rate ?? 19),
         })),
       };
 
@@ -188,7 +208,9 @@ export function BillingModulePage({
           <CardContent className="p-5">
             <p className="text-sm text-ink-600">Volumen</p>
             <p className="mt-2 font-display text-4xl text-ink-900">
-              {euro(records.reduce((sum, record) => sum + Number(record.total_amount ?? 0), 0))}
+              {euro(
+                records.reduce((sum, record) => sum + Number(asEntry(record).total_amount ?? 0), 0),
+              )}
             </p>
           </CardContent>
         </Card>
@@ -197,9 +219,12 @@ export function BillingModulePage({
             <p className="text-sm text-ink-600">{resource === "quotes" ? "Angenommen" : "Bezahlt"}</p>
             <p className="mt-2 font-display text-4xl text-ink-900">
               {
-                records.filter((record) =>
-                  resource === "quotes" ? record.status === "angenommen" : record.status === "bezahlt",
-                ).length
+                records.filter((record) => {
+                  const entry = asEntry(record);
+                  return resource === "quotes"
+                    ? entry.status === "angenommen"
+                    : entry.status === "bezahlt";
+                }).length
               }
             </p>
           </CardContent>
@@ -210,7 +235,9 @@ export function BillingModulePage({
             <p className="mt-2 font-display text-4xl text-ink-900">
               {
                 records.filter((record) =>
-                  !["bezahlt", "storniert", "verloren"].includes(String(record.status ?? "")),
+                  !["bezahlt", "storniert", "verloren"].includes(
+                    String(asEntry(record).status ?? ""),
+                  ),
                 ).length
               }
             </p>
@@ -269,22 +296,23 @@ export function BillingModulePage({
                 </thead>
                 <tbody className="divide-y divide-ink-100 bg-white">
                   {filteredRecords.map((record) => {
+                    const entry = asEntry(record);
                     const customer = bootstrap?.customers.find(
-                      (entry) => entry.id === record.customer_id,
+                      (customerEntry) => customerEntry.id === entry.customer_id,
                     );
 
                     return (
-                      <tr key={String(record.id)}>
+                      <tr key={String(entry.id)}>
                         <td className="px-4 py-3">
-                          <div className="font-semibold text-ink-900">{String(record.title ?? "-")}</div>
+                          <div className="font-semibold text-ink-900">{String(entry.title ?? "-")}</div>
                           <div className="text-xs text-ink-600">
-                            {String(record.quote_number ?? record.invoice_number ?? "-")}
+                            {String(entry.quote_number ?? entry.invoice_number ?? "-")}
                           </div>
                         </td>
                         <td className="px-4 py-3">{customer?.company_name ?? "-"}</td>
-                        <td className="px-4 py-3">{String(record.status ?? "-")}</td>
-                        <td className="px-4 py-3">{String(record.issue_date ?? "-")}</td>
-                        <td className="px-4 py-3">{euro(Number(record.total_amount ?? 0))}</td>
+                        <td className="px-4 py-3">{String(entry.status ?? "-")}</td>
+                        <td className="px-4 py-3">{String(entry.issue_date ?? "-")}</td>
+                        <td className="px-4 py-3">{euro(Number(entry.total_amount ?? 0))}</td>
                         <td className="px-4 py-3">
                           <div className="flex justify-end gap-2">
                             {resource === "quotes" && onConvertQuote ? (
@@ -294,7 +322,7 @@ export function BillingModulePage({
                             ) : null}
                             <Link
                               className="focus-ring inline-flex items-center gap-2 rounded-2xl bg-ink-100 px-3 py-2 text-sm font-semibold text-ink-800"
-                              href={`/${resource === "quotes" ? "angebote" : "rechnungen"}/${record.id}/druck`}
+                              href={`/${resource === "quotes" ? "angebote" : "rechnungen"}/${entry.id}/druck`}
                             >
                               <Download className="h-4 w-4" />
                               PDF
@@ -302,7 +330,7 @@ export function BillingModulePage({
                             <Button onClick={() => openEdit(record)} variant="ghost">
                               Bearbeiten
                             </Button>
-                            <Button onClick={() => void onDelete(String(record.id))} variant="danger">
+                            <Button onClick={() => void onDelete(String(entry.id))} variant="danger">
                               <Trash2 className="h-4 w-4" />
                               Loeschen
                             </Button>
@@ -330,7 +358,7 @@ export function BillingModulePage({
             <label className="mb-2 block text-sm font-semibold text-ink-800">Kunde</label>
             <Select
               onChange={(event) => setValue("customer_id", event.target.value)}
-              value={String(draft?.customer_id ?? "")}
+              value={String(draftEntry?.customer_id ?? "")}
             >
               <option value="">Bitte waehlen</option>
               {(bootstrap?.customers ?? []).map((customer) => (
@@ -344,14 +372,14 @@ export function BillingModulePage({
             <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
             <Input
               onChange={(event) => setValue("title", event.target.value)}
-              value={String(draft?.title ?? "")}
+              value={String(draftEntry?.title ?? "")}
             />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Status</label>
             <Select
               onChange={(event) => setValue("status", event.target.value)}
-              value={String(draft?.status ?? "entwurf")}
+              value={String(draftEntry?.status ?? "entwurf")}
             >
               {billingStatusOptions.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -365,7 +393,7 @@ export function BillingModulePage({
             <Input
               onChange={(event) => setValue("issue_date", event.target.value)}
               type="date"
-              value={String(draft?.issue_date ?? "")}
+              value={String(draftEntry?.issue_date ?? "")}
             />
           </div>
           <div>
@@ -377,14 +405,18 @@ export function BillingModulePage({
                 setValue(resource === "quotes" ? "valid_until" : "due_date", event.target.value)
               }
               type="date"
-              value={String(resource === "quotes" ? draft?.valid_until ?? "" : draft?.due_date ?? "")}
+              value={String(
+                resource === "quotes"
+                  ? draftEntry?.valid_until ?? ""
+                  : draftEntry?.due_date ?? "",
+              )}
             />
           </div>
           <div className="lg:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-ink-800">Zahlungsbedingungen</label>
             <Input
               onChange={(event) => setValue("payment_terms", event.target.value)}
-              value={String(draft?.payment_terms ?? "")}
+              value={String(draftEntry?.payment_terms ?? "")}
             />
           </div>
         </div>
@@ -427,7 +459,7 @@ export function BillingModulePage({
                   placeholder="MwSt."
                   step="0.01"
                   type="number"
-                  value={String(item.tax_rate ?? draft?.tax_rate ?? 19)}
+                  value={String(item.tax_rate ?? draftEntry?.tax_rate ?? 19)}
                 />
                 <Button onClick={() => removeItem(index)} variant="danger">
                   <Trash2 className="h-4 w-4" />
@@ -442,7 +474,7 @@ export function BillingModulePage({
             <label className="mb-2 block text-sm font-semibold text-ink-800">Notizen</label>
             <Textarea
               onChange={(event) => setValue("notes", event.target.value)}
-              value={String(draft?.notes ?? "")}
+              value={String(draftEntry?.notes ?? "")}
             />
           </div>
           <div className="rounded-3xl border border-ink-100 bg-ink-50 p-5">
