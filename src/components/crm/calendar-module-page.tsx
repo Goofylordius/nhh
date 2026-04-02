@@ -19,6 +19,10 @@ type CalendarRecord = {
   id?: string;
 } & object;
 
+function asCalendarEntry(record: CalendarRecord) {
+  return record as Record<string, unknown>;
+}
+
 function buildCalendarDays(currentMonth: Date) {
   const start = startOfWeek(startOfMonth(currentMonth), { weekStartsOn: 1 });
   const end = endOfWeek(endOfMonth(currentMonth), { weekStartsOn: 1 });
@@ -51,21 +55,22 @@ export function CalendarModulePage({
   const [currentMonth, setCurrentMonth] = useState(new Date());
   const [dialogOpen, setDialogOpen] = useState(false);
   const [draft, setDraft] = useState<CalendarRecord | null>(null);
+  const draftEntry = draft ? asCalendarEntry(draft) : null;
 
   const days = useMemo(() => buildCalendarDays(currentMonth), [currentMonth]);
 
   const stats = {
     total: records.length,
-    recurring: records.filter((record) => Boolean((record as Record<string, unknown>).recurrence_rule)).length,
+    recurring: records.filter((record) => Boolean(asCalendarEntry(record).recurrence_rule)).length,
     thisWeek: records.filter((record) => {
-      const entry = record as Record<string, unknown>;
+      const entry = asCalendarEntry(record);
       const eventDate = new Date(String(entry.starts_at));
       const start = startOfWeek(new Date(), { weekStartsOn: 1 });
       const end = endOfWeek(new Date(), { weekStartsOn: 1 });
       return eventDate >= start && eventDate <= end;
     }).length,
     linked: records.filter((record) => {
-      const entry = record as Record<string, unknown>;
+      const entry = asCalendarEntry(record);
       return Boolean(entry.customer_id) || Boolean(entry.project_id);
     }).length,
   };
@@ -90,7 +95,7 @@ export function CalendarModulePage({
   };
 
   const openEdit = (record: CalendarRecord) => {
-    const entry = record as Record<string, unknown>;
+    const entry = asCalendarEntry(record);
     setDraft({
       ...entry,
       participants: Array.isArray(entry.participants)
@@ -109,14 +114,14 @@ export function CalendarModulePage({
 
     const payload = {
       ...draft,
-      participants: String(draft.participants ?? "")
+      participants: String(draftEntry?.participants ?? "")
         .split(",")
         .map((entry) => entry.trim())
         .filter(Boolean),
     };
 
-    if (draft.id) {
-      await onUpdate(String(draft.id), payload);
+    if (draftEntry?.id) {
+      await onUpdate(String(draftEntry.id), payload);
     } else {
       await onCreate(payload);
     }
@@ -129,7 +134,7 @@ export function CalendarModulePage({
     return days.map((day) => ({
       day,
       events: records.filter((record) =>
-        isSameDay(new Date(String((record as Record<string, unknown>).starts_at)), day),
+        isSameDay(new Date(String(asCalendarEntry(record).starts_at)), day),
       ),
     }));
   }, [days, records]);
@@ -244,12 +249,12 @@ export function CalendarModulePage({
                         return;
                       }
                       const entry = records.find(
-                        (record) => String((record as Record<string, unknown>).id) === raw,
+                        (record) => String(asCalendarEntry(record).id) === raw,
                       );
                       if (!entry) {
                         return;
                       }
-                      const calendarEntry = entry as Record<string, unknown>;
+                      const calendarEntry = asCalendarEntry(entry);
                       const startsAt = new Date(String(calendarEntry.starts_at));
                       const endsAt = new Date(String(calendarEntry.ends_at));
                       const duration = endsAt.getTime() - startsAt.getTime();
@@ -267,7 +272,7 @@ export function CalendarModulePage({
                     </div>
                     <div className="space-y-2">
                       {events.map((event) => {
-                        const entry = event as Record<string, unknown>;
+                        const entry = asCalendarEntry(event);
 
                         return (
                           <button
@@ -302,7 +307,7 @@ export function CalendarModulePage({
                     <div className="mt-4 space-y-2">
                       {events.length === 0 ? <p className="text-sm text-ink-500">Keine Termine</p> : null}
                       {events.map((event) => {
-                        const entry = event as Record<string, unknown>;
+                        const entry = asCalendarEntry(event);
 
                         return (
                           <button
@@ -327,10 +332,10 @@ export function CalendarModulePage({
             <div className="space-y-3">
               {records
                 .filter((record) =>
-                  isSameDay(new Date(String((record as Record<string, unknown>).starts_at)), new Date()),
+                  isSameDay(new Date(String(asCalendarEntry(record).starts_at)), new Date()),
                 )
                 .map((event) => {
-                  const entry = event as Record<string, unknown>;
+                  const entry = asCalendarEntry(event);
 
                   return (
                     <Card key={String(entry.id)}>
@@ -357,32 +362,32 @@ export function CalendarModulePage({
         description="Teilnehmer, Erinnerungen und Wiederholungen werden im Supabase-Kalender gespeichert."
         onClose={() => setDialogOpen(false)}
         open={dialogOpen}
-        title={draft?.id ? "Termin bearbeiten" : "Termin anlegen"}
+        title={draftEntry?.id ? "Termin bearbeiten" : "Termin anlegen"}
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-ink-800">Titel</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), title: event.target.value }))} value={String(draft?.title ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), title: event.target.value }))} value={String(draftEntry?.title ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Typ</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), event_type: event.target.value }))} value={String(draft?.event_type ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), event_type: event.target.value }))} value={String(draftEntry?.event_type ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Ort</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), location: event.target.value }))} value={String(draft?.location ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), location: event.target.value }))} value={String(draftEntry?.location ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Start</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), starts_at: event.target.value }))} type="datetime-local" value={String(draft?.starts_at ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), starts_at: event.target.value }))} type="datetime-local" value={String(draftEntry?.starts_at ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Ende</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), ends_at: event.target.value }))} type="datetime-local" value={String(draft?.ends_at ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), ends_at: event.target.value }))} type="datetime-local" value={String(draftEntry?.ends_at ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Kunde</label>
-            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), customer_id: event.target.value }))} value={String(draft?.customer_id ?? "")}>
+            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), customer_id: event.target.value }))} value={String(draftEntry?.customer_id ?? "")}>
               <option value="">Kein Kunde</option>
               {(bootstrap?.customers ?? []).map((customer) => (
                 <option key={customer.id} value={customer.id}>
@@ -393,7 +398,7 @@ export function CalendarModulePage({
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Projekt</label>
-            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), project_id: event.target.value }))} value={String(draft?.project_id ?? "")}>
+            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), project_id: event.target.value }))} value={String(draftEntry?.project_id ?? "")}>
               <option value="">Kein Projekt</option>
               {(bootstrap?.projects ?? []).map((project) => (
                 <option key={project.id} value={project.id}>
@@ -404,15 +409,15 @@ export function CalendarModulePage({
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Teilnehmer</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), participants: event.target.value }))} value={String(draft?.participants ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), participants: event.target.value }))} value={String(draftEntry?.participants ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Erinnerung in Minuten</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), reminder_minutes: event.target.value }))} type="number" value={String(draft?.reminder_minutes ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), reminder_minutes: event.target.value }))} type="number" value={String(draftEntry?.reminder_minutes ?? "")} />
           </div>
           <div>
             <label className="mb-2 block text-sm font-semibold text-ink-800">Wiederholung</label>
-            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), recurrence_rule: event.target.value }))} value={String(draft?.recurrence_rule ?? "")}>
+            <Select onChange={(event) => setDraft((current) => ({ ...(current ?? {}), recurrence_rule: event.target.value }))} value={String(draftEntry?.recurrence_rule ?? "")}>
               {recurrenceOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
@@ -422,12 +427,12 @@ export function CalendarModulePage({
           </div>
           <div className="sm:col-span-2">
             <label className="mb-2 block text-sm font-semibold text-ink-800">Beschreibung</label>
-            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), description: event.target.value }))} value={String(draft?.description ?? "")} />
+            <Input onChange={(event) => setDraft((current) => ({ ...(current ?? {}), description: event.target.value }))} value={String(draftEntry?.description ?? "")} />
           </div>
         </div>
         <div className="mt-6 flex justify-between">
-          {draft?.id ? (
-            <Button onClick={() => void onDelete(String(draft.id))} variant="danger">
+          {draftEntry?.id ? (
+            <Button onClick={() => void onDelete(String(draftEntry.id))} variant="danger">
               <Trash2 className="h-4 w-4" />
               Loeschen
             </Button>
