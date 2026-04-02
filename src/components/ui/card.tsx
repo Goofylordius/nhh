@@ -22,12 +22,12 @@ export function CardHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-col gap-3 border-b border-ink-100 px-5 py-4 sm:flex-row sm:items-start sm:justify-between", className)}>
-      <div>
-        <h2 className="font-display text-2xl text-ink-900">{title}</h2>
-        {description ? <p className="mt-1 text-sm text-ink-700">{description}</p> : null}
+    <div className={cn("flex flex-col gap-3 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-start sm:justify-between", className)}>
+      <div className="min-w-0 flex-1">
+        <h2 className="break-words font-display text-2xl leading-tight text-white">{title}</h2>
+        {description ? <p className="mt-1 text-sm text-slate-300">{description}</p> : null}
       </div>
-      {action}
+      {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
 }
@@ -41,4 +41,3 @@ export function CardContent({
 }) {
   return <div className={cn("p-5", className)}>{children}</div>;
 }
-

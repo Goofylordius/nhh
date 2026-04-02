@@ -5,19 +5,19 @@ import "./globals.css";
 import { AppProvider } from "@/providers/app-provider";
 
 const jakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-jakarta",
 });
 
 const fraunces = Fraunces({
-  subsets: ["latin"],
+  subsets: ["latin", "latin-ext"],
   variable: "--font-fraunces",
 });
 
 export const metadata: Metadata = {
   title: "WerkstattCRM",
   description:
-    "Sicheres CRM fuer Handwerksbetriebe und kleine Unternehmen mit Supabase und Vercel.",
+    "Sicheres CRM für Handwerksbetriebe und kleine Unternehmen mit Supabase und Vercel.",
 };
 
 export default function RootLayout({

@@ -12,13 +12,13 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClassName: Record<Variant, string> = {
   primary:
-    "bg-ink-900 text-white hover:bg-ink-800 focus-visible:ring-ink-900 disabled:bg-ink-300",
+    "bg-slate-100 text-slate-950 hover:bg-white focus-visible:ring-slate-200 disabled:bg-slate-500 disabled:text-slate-300",
   secondary:
-    "bg-mint-500 text-white hover:bg-mint-600 focus-visible:ring-mint-500 disabled:bg-mint-200",
+    "bg-mint-500 text-slate-950 hover:bg-mint-400 focus-visible:ring-mint-400 disabled:bg-mint-900 disabled:text-mint-200",
   ghost:
-    "bg-transparent text-ink-800 hover:bg-ink-100 focus-visible:ring-ink-400 disabled:text-ink-300",
+    "bg-transparent text-slate-200 hover:bg-white/10 focus-visible:ring-slate-400 disabled:text-slate-500",
   danger:
-    "bg-clay-600 text-white hover:bg-clay-700 focus-visible:ring-clay-500 disabled:bg-clay-300",
+    "bg-clay-500 text-white hover:bg-clay-400 focus-visible:ring-clay-400 disabled:bg-clay-900 disabled:text-clay-200",
 };
 
 export function Button({
@@ -39,4 +39,3 @@ export function Button({
     />
   );
 }
-

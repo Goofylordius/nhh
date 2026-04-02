@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 html {
@@ -14,32 +14,32 @@ html {
 body {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(34, 181, 142, 0.16), transparent 30%),
-    radial-gradient(circle at right top, rgba(207, 106, 62, 0.14), transparent 28%),
-    linear-gradient(180deg, #faf6ef 0%, #f2eee5 100%);
-  color: #1f2521;
+    radial-gradient(circle at top left, rgba(61, 231, 184, 0.18), transparent 26%),
+    radial-gradient(circle at top right, rgba(255, 145, 92, 0.14), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(92, 110, 255, 0.12), transparent 30%),
+    linear-gradient(180deg, #0a1016 0%, #0f1721 48%, #111b25 100%);
+  color: #edf3f7;
 }
 
 * {
-  border-color: rgb(197 188 170 / 0.5);
+  border-color: rgb(100 116 139 / 0.24);
 }
 
 ::selection {
-  background: rgba(34, 181, 142, 0.2);
+  background: rgba(61, 231, 184, 0.28);
 }
 
 .glass-panel {
-  @apply rounded-3xl border border-white/60 bg-white/80 shadow-card backdrop-blur;
+  @apply rounded-3xl border border-white/10 bg-slate-950/58 shadow-card backdrop-blur-xl;
 }
 
 .grid-paper {
   background-image:
-    linear-gradient(rgba(154, 122, 66, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(154, 122, 66, 0.08) 1px, transparent 1px);
+    linear-gradient(rgba(148, 163, 184, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.08) 1px, transparent 1px);
   background-size: 28px 28px;
 }
 
 .focus-ring {
-  @apply outline-none ring-0 focus-visible:ring-2 focus-visible:ring-mint-500 focus-visible:ring-offset-2 focus-visible:ring-offset-white;
+  @apply outline-none ring-0 focus-visible:ring-2 focus-visible:ring-mint-400 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950;
 }
-

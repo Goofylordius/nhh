@@ -29,6 +29,6 @@ export const navigationItems: Array<{
   { href: "/aufgaben", label: "Aufgaben", icon: ListTodo },
   { href: "/kalender", label: "Kalender", icon: CalendarDays },
   { href: "/dokumente", label: "Dokumente", icon: FileArchive },
-  { href: "/aktivitaeten", label: "Aktivitaeten", icon: Activity },
+  { href: "/aktivitaeten", label: "Aktivitäten", icon: Activity },
   { href: "/einstellungen", label: "Einstellungen", icon: Cog },
 ];

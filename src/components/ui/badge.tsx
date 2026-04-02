@@ -8,10 +8,10 @@ export function Badge({
   tone?: "default" | "success" | "warning" | "danger";
 }) {
   const toneClasses = {
-    default: "bg-ink-100 text-ink-800",
-    success: "bg-mint-100 text-mint-800",
-    warning: "bg-amber-100 text-amber-800",
-    danger: "bg-clay-100 text-clay-800",
+    default: "bg-white/10 text-slate-200 ring-1 ring-white/10",
+    success: "bg-mint-500/16 text-mint-200 ring-1 ring-mint-400/20",
+    warning: "bg-amber-400/14 text-amber-200 ring-1 ring-amber-300/20",
+    danger: "bg-clay-500/14 text-clay-200 ring-1 ring-clay-300/20",
   };
 
   return (
@@ -20,4 +20,3 @@ export function Badge({
     </span>
   );
 }
-

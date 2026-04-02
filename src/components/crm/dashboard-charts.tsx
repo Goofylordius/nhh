@@ -29,6 +29,10 @@ ChartJS.register(
 );
 
 export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) {
+  const axisColor = "rgba(148, 163, 184, 0.92)";
+  const gridColor = "rgba(148, 163, 184, 0.14)";
+  const legendColor = "#e5edf5";
+
   return (
     <div className="grid gap-4 xl:grid-cols-[1.4fr,1fr]">
       <Card>
@@ -44,8 +48,8 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
                 {
                   label: "Umsatz",
                   data: dashboard.revenueByMonth.map((item) => item.amount),
-                  borderColor: "#22b58e",
-                  backgroundColor: "rgba(34,181,142,0.15)",
+                  borderColor: "#3de7b8",
+                  backgroundColor: "rgba(61,231,184,0.12)",
                   tension: 0.28,
                   fill: true,
                 },
@@ -53,6 +57,11 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
             }}
             options={{
               plugins: {
+                legend: {
+                  labels: {
+                    color: legendColor,
+                  },
+                },
                 tooltip: {
                   callbacks: {
                     label: (context) => euro(context.parsed.y),
@@ -61,6 +70,24 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
               },
               responsive: true,
               maintainAspectRatio: false,
+              scales: {
+                x: {
+                  ticks: {
+                    color: axisColor,
+                  },
+                  grid: {
+                    color: gridColor,
+                  },
+                },
+                y: {
+                  ticks: {
+                    color: axisColor,
+                  },
+                  grid: {
+                    color: gridColor,
+                  },
+                },
+              },
             }}
             height={280}
           />
@@ -75,13 +102,18 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
               datasets: [
                 {
                   data: dashboard.pipelineByStage.map((item) => item.amount || item.count),
-                  backgroundColor: ["#cfa362", "#22b58e", "#f0b56d", "#cf6a3e", "#19886b", "#7c3f2a"],
+                  backgroundColor: ["#f1be77", "#3de7b8", "#ffb36d", "#ff8e67", "#1ebd8d", "#8a4d36"],
                   borderWidth: 0,
                 },
               ],
             }}
             options={{
               plugins: {
+                legend: {
+                  labels: {
+                    color: legendColor,
+                  },
+                },
                 tooltip: {
                   callbacks: {
                     label: (context) => `${context.label}: ${euro(context.parsed)}`,
@@ -105,7 +137,7 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
                 {
                   label: "Aufgaben",
                   data: dashboard.taskByStatus.map((item) => item.count),
-                  backgroundColor: ["#cf6a3e", "#22b58e", "#d6ccb3", "#795e33"],
+                  backgroundColor: ["#ff8e67", "#3de7b8", "#6b7280", "#a78bfa"],
                   borderRadius: 14,
                 },
               ],
@@ -113,11 +145,30 @@ export function DashboardCharts({ dashboard }: { dashboard: DashboardPayload }) 
             options={{
               responsive: true,
               maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  labels: {
+                    color: legendColor,
+                  },
+                },
+              },
               scales: {
+                x: {
+                  ticks: {
+                    color: axisColor,
+                  },
+                  grid: {
+                    color: gridColor,
+                  },
+                },
                 y: {
                   beginAtZero: true,
                   ticks: {
+                    color: axisColor,
                     precision: 0,
+                  },
+                  grid: {
+                    color: gridColor,
                   },
                 },
               },
